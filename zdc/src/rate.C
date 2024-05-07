@@ -151,11 +151,11 @@ int rate(char const* input) {
 
         if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial.GetSize()) continue;  
         l1uGTdecision1 = m_algoDecisionInitial.At(SeedBit[seedzdc.c_str()]);
-        if (l1uGTdecision1) zdcnum++;
+        if (l1uGTdecision1) zdcnum++; cout<<"cout for test"<< endl;
         for (int izdc = 0; i < *nSumsZDC; ++izdc) {
             sumZDCEtHist[izdc].Fill(sumZDCEt[izdc]);
         }
-
+        cout<<"cout for test"<< endl;
         l1uGTdecision2 = m_algoDecisionInitial.At(SeedBit[seedtrue.c_str()]);
         l1uGTdecision3 = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
         if (l1uGTdecision2) truenum++;
