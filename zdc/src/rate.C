@@ -159,8 +159,8 @@ int rate(char const* input) {
         if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial.GetSize()) continue;  
         l1uGTdecision1 = m_algoDecisionInitial.At(SeedBit[seedzdc.c_str()]);
         if (l1uGTdecision1) {
-            zdcnum++; 
-            for (int izdc = 0; i < *nSumsZDC; ++izdc) {
+            zdcnum++;
+            for (int izdc = 0; izdc < *nSumsZDC; ++izdc) {
             sumZDCEtHist.Fill(sumZDCEt[izdc]);
             if (izdc==0) sumZDCEtHist0.Fill(sumZDCEt[izdc]);
             if (izdc==1) sumZDCEtHist1.Fill(sumZDCEt[izdc]);
@@ -173,7 +173,6 @@ int rate(char const* input) {
             }
         }
         
-        cout<<"cout for test"<< endl;
         l1uGTdecision2 = m_algoDecisionInitial.At(SeedBit[seedtrue.c_str()]);
         l1uGTdecision3 = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
         if (l1uGTdecision2) truenum++;
