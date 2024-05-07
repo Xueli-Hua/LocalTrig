@@ -129,12 +129,13 @@ int rate(char const* input) {
     FillChain(l1UpgChain, files);
     TTreeReader l1UpgReader(&l1UpgChain);
     TTreeReaderArray<float> sumZDCEt(l1UpgReader, "sumZDCEt");
+    TTreeReaderValue<int> nSumsZDC(l1UpgReader, "nSumsZDC");
 
     // create histograms for efficiency plots 
-    int nbins = 25;
+    int nbins = 160;
     float min = 0;
-    float max = 10;
-    TH1F recomuHist("recomuHist", "", nbins, min, max);
+    float max = 1600;
+    TH1F sumZDCEtHist("sumZDCEt", "", nbins, min, max);
 
     Double_t zdcnum=0;
     Double_t truenum=0;
@@ -152,8 +153,9 @@ int rate(char const* input) {
         l1uGTdecision2 = m_algoDecisionInitial.At(SeedBit[seedtrue.c_str()]);
         l1uGTdecision3 = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
         cout << "iEvt: " << i << ", sumZDCEt.size: " << sumZDCEt.GetSize() << endl;
-        if (l1uGTdecision1) {
-          zdcnum++;
+        if (l1uGTdecision1) zdcnum++;
+        for (int izdc = 0; i < *nSumsZDC; ++i) {
+            sumZDCEtHist->Fill(sumZDCEt[izdc]);
         }
         if (l1uGTdecision2) truenum++;
         if (l1uGTdecision3) sgmonum++;
