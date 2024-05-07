@@ -136,7 +136,7 @@ int rate(char const* input) {
     float min = 0;
     float max = 1600;
     TH1F sumZDCEtHist("sumZDCEt", "", nbins, min, max);*/
-    TH1F sumZDCEtHist[8];
+    for (int i = 0; i < 8; ++i) {TH1F sumZDCEtHist[i];}
 
     Double_t zdcnum=0;
     Double_t truenum=0;
