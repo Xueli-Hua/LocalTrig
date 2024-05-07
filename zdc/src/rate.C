@@ -135,7 +135,7 @@ int rate(char const* input) {
     int nbins = 160;
     float min = 0;
     float max = 1600;
-    TH1F sumZDCEtHist("sumZDCEt", "", nbins, min, max);
+    TH1F sumZDCEtHist;
     TH1F sumZDCEtHist0("sumZDCEt0", "", nbins, min, max);
     TH1F sumZDCEtHist1("sumZDCEt1", "", nbins, min, max);
     TH1F sumZDCEtHist2("sumZDCEt2", "", nbins, min, max);
