@@ -132,11 +132,18 @@ int rate(char const* input) {
     TTreeReaderValue<unsigned short> nSumsZDC(l1UpgReader, "nSumsZDC");
 
     // create histograms for efficiency plots 
-    /*int nbins = 160;
+    int nbins = 160;
     float min = 0;
     float max = 1600;
-    TH1F sumZDCEtHist("sumZDCEt", "", nbins, min, max);*/
-    TH1F *sumZDCEtHist[8];
+    TH1F sumZDCEtHist("sumZDCEt", "", nbins, min, max);
+    TH1F sumZDCEtHist0("sumZDCEt0", "", nbins, min, max);
+    TH1F sumZDCEtHist1("sumZDCEt1", "", nbins, min, max);
+    TH1F sumZDCEtHist2("sumZDCEt2", "", nbins, min, max);
+    TH1F sumZDCEtHist3("sumZDCEt3", "", nbins, min, max);
+    TH1F sumZDCEtHist4("sumZDCEt4", "", nbins, min, max);
+    TH1F sumZDCEtHist5("sumZDCEt5", "", nbins, min, max);
+    TH1F sumZDCEtHist6("sumZDCEt6", "", nbins, min, max);
+    TH1F sumZDCEtHist7("sumZDCEt7", "", nbins, min, max);
 
     Double_t zdcnum=0;
     Double_t truenum=0;
@@ -151,11 +158,21 @@ int rate(char const* input) {
 
         if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial.GetSize()) continue;  
         l1uGTdecision1 = m_algoDecisionInitial.At(SeedBit[seedzdc.c_str()]);
-        if (l1uGTdecision1) zdcnum++; 
-        cout<<"cout for test"<< endl;
-        for (int izdc = 0; i < *nSumsZDC; ++izdc) {
-            sumZDCEtHist[izdc]->Fill(sumZDCEt[izdc]);
+        if (l1uGTdecision1) {
+            zdcnum++; 
+            for (int izdc = 0; i < *nSumsZDC; ++izdc) {
+            sumZDCEtHist.Fill(sumZDCEt[izdc]);
+            if (izdc==0) sumZDCEtHist0.Fill(sumZDCEt[izdc]);
+            if (izdc==1) sumZDCEtHist1.Fill(sumZDCEt[izdc]);
+            if (izdc==2) sumZDCEtHist2.Fill(sumZDCEt[izdc]);
+            if (izdc==3) sumZDCEtHist3.Fill(sumZDCEt[izdc]);
+            if (izdc==4) sumZDCEtHist4.Fill(sumZDCEt[izdc]);
+            if (izdc==5) sumZDCEtHist5.Fill(sumZDCEt[izdc]);
+            if (izdc==6) sumZDCEtHist6.Fill(sumZDCEt[izdc]);
+            if (izdc==7) sumZDCEtHist7.Fill(sumZDCEt[izdc]);
+            }
         }
+        
         cout<<"cout for test"<< endl;
         l1uGTdecision2 = m_algoDecisionInitial.At(SeedBit[seedtrue.c_str()]);
         l1uGTdecision3 = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
@@ -168,7 +185,15 @@ int rate(char const* input) {
 
     // save histograms to file so I can look at them 
     TFile* fout = new TFile("results/sumZDCEt.root", "recreate");
-    for (int i = 0; i < 8; ++i) {sumZDCEtHist[i]->Write();}
+    sumZDCEtHist->Write();
+    sumZDCEtHist0->Write();
+    sumZDCEtHist1->Write();
+    sumZDCEtHist2->Write();
+    sumZDCEtHist3->Write();
+    sumZDCEtHist4->Write();
+    sumZDCEtHist5->Write();
+    sumZDCEtHist6->Write();
+    sumZDCEtHist7->Write();
     fout->Close();
    
     return 0;
