@@ -135,7 +135,7 @@ int rate(char const* input) {
     int nbins = 160;
     float min = 0;
     float max = 1600;
-    TH1F sumZDCEtHist("sumZDCEt", "", nbins, min, max);
+    TH1F sumZDCEtHist[8]("sumZDCEt", "", nbins, min, max);
 
     Double_t zdcnum=0;
     Double_t truenum=0;
@@ -150,19 +150,24 @@ int rate(char const* input) {
 
         if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial.GetSize()) continue;  
         l1uGTdecision1 = m_algoDecisionInitial.At(SeedBit[seedzdc.c_str()]);
+        if (l1uGTdecision1) zdcnum++;
+        for (int izdc = 0; i < *nSumsZDC; ++izdc) {
+            sumZDCEtHist[izdc].Fill(sumZDCEt[izdc]);
+        }
+
         l1uGTdecision2 = m_algoDecisionInitial.At(SeedBit[seedtrue.c_str()]);
         l1uGTdecision3 = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
-        cout << "iEvt: " << i << ", sumZDCEt.size: " << sumZDCEt.GetSize() << endl;
-        if (l1uGTdecision1) zdcnum++;
-        for (int izdc = 0; i < *nSumsZDC; ++i) {
-            sumZDCEtHist->Fill(sumZDCEt[izdc]);
-        }
         if (l1uGTdecision2) truenum++;
         if (l1uGTdecision3) sgmonum++;
     }
     cout << "L1_ZDC1n_Bkp1_OR rate: " << zdcnum << "/" << totalEvents << " = " << zdcnum/totalEvents << endl;
     cout << "L1_AlwaysTrue rate: " << truenum << "/" << totalEvents << " = " << truenum/totalEvents << endl;
     cout << "L1_SingleMuOpen rate: " << sgmonum << "/" << totalEvents << " = " << sgmonum/totalEvents << endl;
+
+    // save histograms to file so I can look at them 
+    TFile* fout = new TFile("results/sumZDCEt.root", "recreate");
+    for (int i = 0; i < 8; ++i) {sumZDCEtHist[i].Write();}
+    fout->Close();
    
     return 0;
 }
