@@ -135,15 +135,15 @@ int rate(char const* input) {
     int nbins = 200;
     float min = 0;
     float max = 2000;
-    TH1F sumZDCEtHist("sumZDCEt", "", nbins, min, max);
-    TH1F sumZDCEtHist0("sumZDCEt0", "", nbins, min, max);
-    TH1F sumZDCEtHist1("sumZDCEt1", "", nbins, min, max);
-    TH1F sumZDCEtHist2("sumZDCEt2", "", nbins, min, max);
-    TH1F sumZDCEtHist3("sumZDCEt3", "", nbins, min, max);
-    TH1F sumZDCEtHist4("sumZDCEt4", "", nbins, min, max);
-    TH1F sumZDCEtHist5("sumZDCEt5", "", nbins, min, max);
-    TH1F sumZDCEtHist6("sumZDCEt6", "", nbins, min, max);
-    TH1F sumZDCEtHist7("sumZDCEt7", "", nbins, min, max);
+    TH1F sumZDCEtHist("sumZDCEt", "", 140, min, 1400);
+    TH1F sumZDCEtHist0("sumZDCEt0", "", 140, min, 1400);
+    TH1F sumZDCEtHist1("sumZDCEt1", "", 140, min, 1400);
+    TH1F sumZDCEtHist2("sumZDCEt2", "", 35, min, 350);
+    TH1F sumZDCEtHist3("sumZDCEt3", "", 35, min, 350);
+    TH1F sumZDCEtHist4("sumZDCEt4", "", 35, min, 350);
+    TH1F sumZDCEtHist5("sumZDCEt5", "", 35, min, 350);
+    TH1F sumZDCEtHist6("sumZDCEt6", "", 20, min, 200);
+    TH1F sumZDCEtHist7("sumZDCEt7", "", 20, min, 200);
 
     Double_t zdcnum=0;
     Double_t truenum=0;
