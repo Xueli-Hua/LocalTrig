@@ -129,7 +129,7 @@ int rate(char const* input) {
     FillChain(l1UpgChain, files);
     TTreeReader l1UpgReader(&l1UpgChain);
     TTreeReaderArray<float> sumZDCEt(l1UpgReader, "sumZDCEt");
-    TTreeReaderValue<int> nSumsZDC(l1UpgReader, "nSumsZDC");
+    TTreeReaderValue<unsigned short> nSumsZDC(l1UpgReader, "nSumsZDC");
 
     // create histograms for efficiency plots 
     /*int nbins = 160;
