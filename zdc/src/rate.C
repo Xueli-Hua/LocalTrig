@@ -132,9 +132,9 @@ int rate(char const* input) {
     TTreeReaderValue<unsigned short> nSumsZDC(l1UpgReader, "nSumsZDC");
 
     // create histograms for efficiency plots 
-    int nbins = 200;
+    //int nbins = 200;
     float min = 0;
-    float max = 2000;
+    //float max = 2000;
     TH1F sumZDCEtHist("sumZDCEt", "", 140, min, 1400);
     TH1F sumZDCEtHist0("sumZDCEt0", "", 140, min, 1400);
     TH1F sumZDCEtHist1("sumZDCEt1", "", 140, min, 1400);
