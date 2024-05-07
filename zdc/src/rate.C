@@ -185,15 +185,15 @@ int rate(char const* input) {
 
     // save histograms to file so I can look at them 
     TFile* fout = new TFile("results/sumZDCEt.root", "recreate");
-    sumZDCEtHist->Write();
-    sumZDCEtHist0->Write();
-    sumZDCEtHist1->Write();
-    sumZDCEtHist2->Write();
-    sumZDCEtHist3->Write();
-    sumZDCEtHist4->Write();
-    sumZDCEtHist5->Write();
-    sumZDCEtHist6->Write();
-    sumZDCEtHist7->Write();
+    sumZDCEtHist.Write();
+    sumZDCEtHist0.Write();
+    sumZDCEtHist1.Write();
+    sumZDCEtHist2.Write();
+    sumZDCEtHist3.Write();
+    sumZDCEtHist4.Write();
+    sumZDCEtHist5.Write();
+    sumZDCEtHist6.Write();
+    sumZDCEtHist7.Write();
     fout->Close();
    
     return 0;
