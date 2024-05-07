@@ -136,7 +136,7 @@ int rate(char const* input) {
     float min = 0;
     float max = 1600;
     TH1F sumZDCEtHist("sumZDCEt", "", nbins, min, max);*/
-    for (int i = 0; i < 8; ++i) {TH1F sumZDCEtHist[i];}
+    TH1F *sumZDCEtHist[8];
 
     Double_t zdcnum=0;
     Double_t truenum=0;
@@ -154,7 +154,7 @@ int rate(char const* input) {
         if (l1uGTdecision1) zdcnum++; 
         cout<<"cout for test"<< endl;
         for (int izdc = 0; i < *nSumsZDC; ++izdc) {
-            sumZDCEtHist[izdc].Fill(sumZDCEt[izdc]);
+            sumZDCEtHist[izdc]->Fill(sumZDCEt[izdc]);
         }
         cout<<"cout for test"<< endl;
         l1uGTdecision2 = m_algoDecisionInitial.At(SeedBit[seedtrue.c_str()]);
@@ -168,7 +168,7 @@ int rate(char const* input) {
 
     // save histograms to file so I can look at them 
     TFile* fout = new TFile("results/sumZDCEt.root", "recreate");
-    for (int i = 0; i < 8; ++i) {sumZDCEtHist[i].Write();}
+    for (int i = 0; i < 8; ++i) {sumZDCEtHist[i]->Write();}
     fout->Close();
    
     return 0;
