@@ -176,8 +176,8 @@ int rate(char const* input) {
             }
         }
 
-        int sumPInt = sumZDCEt[4]*2;
-        int sumNInt = sumZDCEt[5]*2;
+        int sumPInt = sumZDCEt[3]*2;
+        int sumNInt = sumZDCEt[4]*2;
         sumMinusEmuHist->Fill(sumNInt); 
         sumPlusEmuHist->Fill(sumPInt); 
         
@@ -191,7 +191,7 @@ int rate(char const* input) {
     cout << "L1_SingleMuOpen rate: " << sgmonum << "/" << totalEvents << " = " << sgmonum/totalEvents << endl;
 
     // save histograms to file so I can look at them 
-    TFile* fout = new TFile("results/sumZDCEt.root", "recreate");
+    TFile* fout = new TFile("results/sumZDCEt2.root", "recreate");
     sumZDCEtHist.Write();
     sumZDCEtHist0.Write();
     sumZDCEtHist1.Write();
