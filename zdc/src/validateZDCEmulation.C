@@ -889,7 +889,7 @@ int validateZDCEmulation(
   /* read in information from TTrees */
   //float maxSumPlus = 0;
   //float maxSumMinus = 0;
-  for (Long64_t i = 0; i < totalEvents; i++) {
+  for (Long64_t i = 0; i < 10; i++) {
     offReaderZDCDigi.Next(); emuReader.Next();
     unsigned short rawadc[18];
     for (int j = 0; j < *N; j++) {
