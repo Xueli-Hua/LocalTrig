@@ -159,7 +159,7 @@ int EvtPlaneAng(char const* input) {
     phiLegend.SetFillStyle(0);
     phiLegend.SetTextSize(0.04);
     //phiLegend.SetHeader("");
-    phiLegend.AddEntry(&trkphiHist, "Raw", "l");
+    phiLegend.AddEntry(&trkphiHist, "Raw-Dau", "l");
     phiLegend.AddEntry(&trkphiRHist, "Recenter", "l");
     phiLegend.Draw("same");
 
