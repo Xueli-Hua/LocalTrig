@@ -848,7 +848,7 @@ void FillChain(TChain &chain, vector<string> &files) {
 int validateZDCEmulation(
     char const *input =
         "/eos/cms/store/group/phys_heavyions/hbossi/HIForward/crab_run327174test_ZB/230823_160738/0000/",
-    int trigType = 1, float ZDC_1nthreshold = 5000, bool verbose = false) {
+    float ZDC_1nthreshold = 5000, bool verbose = false) {
   /* read in all files in the input folder */
   vector<string> files;
   GetFiles(input, files);
@@ -882,13 +882,13 @@ int validateZDCEmulation(
 
   Long64_t totalEvents = offReaderZDCDigi.GetEntries(true);
   std::cout << "total Number of events " << totalEvents << std::endl;
-  int counter_ZDCselected = 0;
-  int counter_ZDC_Jetselected = 0;
-  int counter_ZDC_JetNotselected = 0;
+  //int counter_ZDCselected = 0;
+  //int counter_ZDC_Jetselected = 0;
+  //int counter_ZDC_JetNotselected = 0;
 
   /* read in information from TTrees */
-  float maxSumPlus = 0;
-  float maxSumMinus = 0;
+  //float maxSumPlus = 0;
+  //float maxSumMinus = 0;
   for (Long64_t i = 0; i < totalEvents; i++) {
     offReaderZDCDigi.Next(); emuReader.Next();
     unsigned short rawadc[18];
