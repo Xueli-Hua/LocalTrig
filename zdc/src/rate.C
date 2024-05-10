@@ -145,6 +145,9 @@ int rate(char const* input) {
     TH1F sumZDCEtHist6("sumZDCEt6", "", 20, min, 200);
     TH1F sumZDCEtHist7("sumZDCEt7", "", 20, min, 200);
 
+    TH1D *sumPlusEmuHist = new TH1D("sumPlusEmu", "sumPlusEmu", 5000, 0, 10000);
+    TH1D *sumMinusEmuHist = new TH1D("sumMinusEmu", "sumMinusEmu", 5000, 0, 10000);
+
     Double_t zdcnum=0;
     Double_t truenum=0;
     Double_t sgmonum=0;
@@ -172,6 +175,11 @@ int rate(char const* input) {
             if (izdc==7) sumZDCEtHist7.Fill(sumZDCEt[izdc]);
             }
         }
+
+        int sumPInt = sumZDCEt[4]*2;
+        int sumNInt = sumZDCEt[5]*2;
+        sumMinusEmuHist->Fill(sumNInt); 
+        sumPlusEmuHist->Fill(sumPInt); 
         
         l1uGTdecision2 = m_algoDecisionInitial.At(SeedBit[seedtrue.c_str()]);
         l1uGTdecision3 = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
@@ -193,6 +201,9 @@ int rate(char const* input) {
     sumZDCEtHist5.Write();
     sumZDCEtHist6.Write();
     sumZDCEtHist7.Write();
+
+    sumPlusEmuHist->Write(); 
+    sumMinusEmuHist->Write(); 
     fout->Close();
    
     return 0;
