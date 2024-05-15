@@ -117,7 +117,7 @@ int rate(char const* input) {
     trignames.close();
     
     string seedzdc = "L1_ZDC1n_Bkp1_OR"; 
-    string seedtrue = "L1_AlwaysTrue";
+    string seedzb = "L1_ZeroBias_copy";
     string seedsgmo = "L1_SingleMuOpen";
     if (SeedBit.find(seedzdc.c_str()) == SeedBit.end()) return false;
     bool l1uGTdecision1;
@@ -149,7 +149,7 @@ int rate(char const* input) {
     TH1D *sumMinusEmuHist = new TH1D("sumMinusEmu", "sumMinusEmu", 5000, 0, 10000);
 
     Double_t zdcnum=0;
-    Double_t truenum=0;
+    Double_t zbnum=0;
     Double_t sgmonum=0;
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
@@ -181,13 +181,13 @@ int rate(char const* input) {
         sumMinusEmuHist->Fill(sumNInt); 
         sumPlusEmuHist->Fill(sumPInt); 
         
-        l1uGTdecision2 = m_algoDecisionInitial.At(SeedBit[seedtrue.c_str()]);
+        l1uGTdecision2 = m_algoDecisionInitial.At(SeedBit[seedzb.c_str()]);
         l1uGTdecision3 = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
-        if (l1uGTdecision2) truenum++;
+        if (l1uGTdecision2) zbnum++;
         if (l1uGTdecision3) sgmonum++;
     }
     cout << "L1_ZDC1n_Bkp1_OR rate: " << zdcnum << "/" << totalEvents << " = " << zdcnum/totalEvents << endl;
-    cout << "L1_AlwaysTrue rate: " << truenum << "/" << totalEvents << " = " << truenum/totalEvents << endl;
+    cout << "L1_ZeroBias_copy rate: " << zbnum << "/" << totalEvents << " = " << zbnum/totalEvents << endl;
     cout << "L1_SingleMuOpen rate: " << sgmonum << "/" << totalEvents << " = " << sgmonum/totalEvents << endl;
 
     // save histograms to file so I can look at them 
