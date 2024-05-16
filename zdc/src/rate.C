@@ -83,10 +83,10 @@ int rate(char const* input) {
     GetFiles(input, files);
 
     // read in L1uGT information 
-    TChain l1uGTChainForBit("l1uGTTree/L1uGTTree");
+    TChain l1uGTChainForBit("l1uGTEmuTree/L1uGTTree");
     FillChain(l1uGTChainForBit, files);
 
-    TChain l1uGTChain("l1uGTTree/L1uGTTree");
+    TChain l1uGTChain("l1uGTEmuTree/L1uGTTree");
     FillChain(l1uGTChain, files);
     TTreeReader l1uGTReader(&l1uGTChain);
     TTreeReaderArray<bool> m_algoDecisionInitial(l1uGTReader, "m_algoDecisionInitial");
