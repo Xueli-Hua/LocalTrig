@@ -142,14 +142,6 @@ int rate(char const* input) {
     float min = 0;
     //float max = 2000;
     TH1F sumZDCEtHist("sumZDCEt", "", 140, min, 1400);
-    TH1F sumZDCEtHist0("sumZDCEt0", "", 140, min, 1400);
-    TH1F sumZDCEtHist1("sumZDCEt1", "", 140, min, 1400);
-    TH1F sumZDCEtHist2("sumZDCEt2", "", 35, min, 350);
-    TH1F sumZDCEtHist3("sumZDCEt3", "", 35, min, 350);
-    TH1F sumZDCEtHist4("sumZDCEt4", "", 35, min, 350);
-    TH1F sumZDCEtHist5("sumZDCEt5", "", 35, min, 350);
-    TH1F sumZDCEtHist6("sumZDCEt6", "", 20, min, 200);
-    TH1F sumZDCEtHist7("sumZDCEt7", "", 20, min, 200);
 
     TH1D *sumPlusEmuHist = new TH1D("sumPlusEmu", "sumPlusEmu", 5000, 0, 10000);
     TH1D *sumMinusEmuHist = new TH1D("sumMinusEmu", "sumMinusEmu", 5000, 0, 10000);
@@ -171,14 +163,6 @@ int rate(char const* input) {
             zdcnum++;
             for (int izdc = 0; izdc < *nSumsZDC; ++izdc) {
             sumZDCEtHist.Fill(sumZDCEt[izdc]);
-            if (izdc==0) sumZDCEtHist0.Fill(sumZDCEt[izdc]);
-            if (izdc==1) sumZDCEtHist1.Fill(sumZDCEt[izdc]);
-            if (izdc==2) sumZDCEtHist2.Fill(sumZDCEt[izdc]);
-            if (izdc==3) sumZDCEtHist3.Fill(sumZDCEt[izdc]);
-            if (izdc==4) sumZDCEtHist4.Fill(sumZDCEt[izdc]);
-            if (izdc==5) sumZDCEtHist5.Fill(sumZDCEt[izdc]);
-            if (izdc==6) sumZDCEtHist6.Fill(sumZDCEt[izdc]);
-            if (izdc==7) sumZDCEtHist7.Fill(sumZDCEt[izdc]);
             }
         }
 
@@ -208,16 +192,6 @@ int rate(char const* input) {
 
     // save histograms to file so I can look at them 
     TFile* fout = new TFile("results/sumZDCEt2.root", "recreate");
-    sumZDCEtHist.Write();
-    sumZDCEtHist0.Write();
-    sumZDCEtHist1.Write();
-    sumZDCEtHist2.Write();
-    sumZDCEtHist3.Write();
-    sumZDCEtHist4.Write();
-    sumZDCEtHist5.Write();
-    sumZDCEtHist6.Write();
-    sumZDCEtHist7.Write();
-
     sumPlusEmuHist->Write(); 
     sumMinusEmuHist->Write(); 
     fout->Close();
