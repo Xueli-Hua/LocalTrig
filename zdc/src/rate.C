@@ -83,10 +83,10 @@ int rate(char const* input) {
     GetFiles(input, files);
 
     // read in L1uGT information 
-    TChain l1uGTChainForBit("l1uGTTree/L1uGTTree");
+    TChain l1uGTChainForBit("l1uGTEmuTree/L1uGTTree");
     FillChain(l1uGTChainForBit, files);
 
-    TChain l1uGTChain("l1uGTTree/L1uGTTree");
+    TChain l1uGTChain("l1uGTEmuTree/L1uGTTree");
     FillChain(l1uGTChain, files);
     TTreeReader l1uGTReader(&l1uGTChain);
     TTreeReaderArray<bool> m_algoDecisionInitial(l1uGTReader, "m_algoDecisionInitial");
@@ -111,10 +111,10 @@ int rate(char const* input) {
         SeedBit[name.first] = ParseAlias(name.second);
     }
 
-    ofstream trignames;
+    /*ofstream trignames;
     trignames.open("results/trigs.txt");
     for (auto const & name: names) trignames << name.c_str() << endl;
-    trignames.close();
+    trignames.close();*/
     
     string seedzdc = "L1_ZDC1n_Bkp1_OR"; 
     string seedzb = "L1_ZeroBias_copy";
@@ -126,8 +126,13 @@ int rate(char const* input) {
 
     vector<string> seeds={"L1_ZeroBias_copy","L1_ZDC1n_Bkp1_OR","L1_SingleJet8_ZDC1n_AsymXOR","L1_SingleJet12_ZDC1n_AsymXOR","L1_SingleJet16_ZDC1n_AsymXOR","L1_SingleJet20_ZDC1n_AsymXOR","L1_SingleJet24_ZDC1n_AsymXOR","L1_SingleJet28_ZDC1n_AsymXOR","L1_SingleJet8_ZDC1n_OR","L1_SingleJet12_ZDC1n_OR","L1_SingleJet16_ZDC1n_OR","L1_SingleJet20_ZDC1n_OR","L1_SingleJet24_ZDC1n_OR","L1_SingleJet28_ZDC1n_OR","L1_ZDC1n_AsymXOR","L1_ZDC1n_OR"};
     bool l1uGTEmudecisions[16];
-    Double_t num[16];
-    Double_t ZBrate = 11245.6*1088;
+    Double_t num[16][5];
+    vector<Double_t> ZBrate = {11245.6*1088,11245.6*880,11245.6*960,11245.6*394,11245.6*204};
+    vector<UInt_t> runRange880 = {375245,375252,375256,375259,375300,375317,375413,375441,375448,375455,375463,375658,375665,375697,375703};
+    vector<UInt_t> runRange960 = {375483,375491,375507,375513,375531,375545,375549};
+    vector<UInt_t> runRange394 = {375391};
+    vector<UInt_t> runRange1088 = {374925,374970,375007,375013,375055,375058,375064,375110,375145,375164,375195,375202};
+    vector<UInt_t> runRange204 = {374950,374961};
 
 
     // read in l1UpgradeTree 
@@ -137,12 +142,17 @@ int rate(char const* input) {
     TTreeReaderArray<float> sumZDCEt(l1UpgReader, "sumZDCEt");
     TTreeReaderValue<unsigned short> nSumsZDC(l1UpgReader, "nSumsZDC");
 
+    // read in l1EventTree
+    TChain l1EvtChain("l1EventTree/L1EventTree");
+    FillChain(l1EvtChain, files);
+    TTreeReader l1EvtReader(&l1EvtChain);
+    TTreeReaderValue<UInt_t> runNb(l1EvtReader, "run");
+
     // create histograms for efficiency plots 
     //int nbins = 200;
     float min = 0;
     //float max = 2000;
     TH1F sumZDCEtHist("sumZDCEt", "", 140, min, 1400);
-
     TH1D *sumPlusEmuHist = new TH1D("sumPlusEmu", "sumPlusEmu", 5000, 0, 10000);
     TH1D *sumMinusEmuHist = new TH1D("sumMinusEmu", "sumMinusEmu", 5000, 0, 10000);
 
@@ -152,7 +162,7 @@ int rate(char const* input) {
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
     for (Long64_t i = 0; i < totalEvents; i++) {
-        l1uGTReader.Next();l1UpgReader.Next();
+        l1uGTReader.Next();l1UpgReader.Next();l1EvtReader.Next();
         if (i % 20000 == 0) { 
             cout << "Entry: " << i << " / " <<  totalEvents << endl; 
         }
@@ -178,7 +188,13 @@ int rate(char const* input) {
 
 	for (int i=0;i<16;i++) {
 	    l1uGTEmudecisions[i]=m_algoDecisionInitial.At(SeedBit[seeds[i].c_str()]);
-	    if (l1uGTEmudecisions[i]) num[i]++;
+	    if (l1uGTEmudecisions[i]) {
+		if (std::find(runRange1088.begin(), runRange1088.end(), runNb) != runRange1088.end()) num[i][0]++;
+		if (std::find(runRange880.begin(), runRange880.end(), runNb) != runRange880.end()) num[i][1]++;
+		if (std::find(runRange960.begin(), runRange960.end(), runNb) != runRange960.end()) num[i][2]++;
+		if (std::find(runRange394.begin(), runRange394.end(), runNb) != runRange394.end()) num[i][3]++;
+		if (std::find(runRange204.begin(), runRange204.end(), runNb) != runRange204.end()) num[i][4]++;
+	    }
 	}
 
     }
@@ -186,8 +202,12 @@ int rate(char const* input) {
     cout << "L1_ZeroBias_copy rate: " << zbnum << "/" << totalEvents << " = " << zbnum/totalEvents << endl;
     cout << "L1_SingleMuOpen rate: " << sgmonum << "/" << totalEvents << " = " << sgmonum/totalEvents << endl;
 
+    const std::map<uint, int> BrNb_ = {    {0, 1088},    {1, 880},    {2, 960},    {3, 394},    {4, 204}    };
+
     for (int i=0;i<16;i++) {
-	cout << seeds[i].c_str() << " rate: " << num[i] << "/" << totalEvents << "*11245.6*1088 = " << num[i]/totalEvents*ZBrate << endl;
+	for (int j=0;j<5;j++) {
+	cout << "Nb of Branches: " << BrNb_.at(j) << ", " << seeds[i].c_str() << " rate: " << num[i][j] << "/" << totalEvents << "*11245.6*" << BrNb_.at(j) << " = " << num[i][j]/totalEvents*ZBrate[j] << endl;
+    	}
     }
 
     // save histograms to file so I can look at them 
