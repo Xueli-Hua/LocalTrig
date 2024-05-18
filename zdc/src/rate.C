@@ -128,11 +128,11 @@ int rate(char const* input) {
     bool l1uGTEmudecisions[16];
     Double_t num[16][5];
     vector<Double_t> ZBrate = {11245.6*1088,11245.6*880,11245.6*960,11245.6*394,11245.6*204};
-    vector<UInt_t> runRange880 = {375245,375252,375256,375259,375300,375317,375413,375441,375448,375455,375463,375658,375665,375697,375703};
-    vector<UInt_t> runRange960 = {375483,375491,375507,375513,375531,375545,375549};
-    vector<UInt_t> runRange394 = {375391};
-    vector<UInt_t> runRange1088 = {374925,374970,375007,375013,375055,375058,375064,375110,375145,375164,375195,375202};
-    vector<UInt_t> runRange204 = {374950,374961};
+    vector<TTreeReaderValue<UInt_t>> runRange880 = {375245,375252,375256,375259,375300,375317,375413,375441,375448,375455,375463,375658,375665,375697,375703};
+    vector<TTreeReaderValue<UInt_t>> runRange960 = {375483,375491,375507,375513,375531,375545,375549};
+    vector<TTreeReaderValue<UInt_t>> runRange394 = {375391};
+    vector<TTreeReaderValue<UInt_t>> runRange1088 = {374925,374970,375007,375013,375055,375058,375064,375110,375145,375164,375195,375202};
+    vector<TTreeReaderValue<UInt_t>> runRange204 = {374950,374961};
 
 
     // read in l1UpgradeTree 
