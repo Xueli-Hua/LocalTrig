@@ -155,17 +155,20 @@ int rate(char const* input) {
     TH1F sumZDCEtHist("sumZDCEt", "", 140, min, 1400);
     TH1D *sumPlusEmuHist = new TH1D("sumPlusEmu", "sumPlusEmu", 5000, 0, 10000);
     TH1D *sumMinusEmuHist = new TH1D("sumMinusEmu", "sumMinusEmu", 5000, 0, 10000);
+    TH1F runNbHist("runNb","runNb",900,374900,375800);
 
     Double_t zdcnum=0;
     Double_t zbnum=0;
     Double_t sgmonum=0;
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
-    for (Long64_t i = 0; i < totalEvents; i++) {
+    for (Long64_t i = 0; i < 1000000; i++) {
         l1uGTReader.Next();l1UpgReader.Next();l1EvtReader.Next();
         if (i % 200000 == 0) { 
             cout << "Entry: " << i << " / " <<  totalEvents << endl; 
         }
+
+	runNbHist.Fill(*runNb);
 
         if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial.GetSize()) continue;  
         l1uGTdecision1 = m_algoDecisionInitial.At(SeedBit[seedzdc.c_str()]);
@@ -211,9 +214,10 @@ int rate(char const* input) {
     }
 
     // save histograms to file so I can look at them 
-    TFile* fout = new TFile("results/sumZDCEt2.root", "recreate");
+    TFile* fout = new TFile("results/runNb.root", "recreate");
     sumPlusEmuHist->Write(); 
     sumMinusEmuHist->Write(); 
+    runNbHist.Write(); 
     fout->Close();
    
     return 0;
