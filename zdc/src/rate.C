@@ -83,10 +83,10 @@ int rate(char const* input) {
     GetFiles(input, files);
 
     // read in L1uGT information 
-    TChain l1uGTChainForBit("l1uGTEmuTree/L1uGTTree");
+    TChain l1uGTChainForBit("l1uGTTree/L1uGTTree");
     FillChain(l1uGTChainForBit, files);
 
-    TChain l1uGTChain("l1uGTEmuTree/L1uGTTree");
+    TChain l1uGTChain("l1uGTTree/L1uGTTree");
     FillChain(l1uGTChain, files);
     TTreeReader l1uGTReader(&l1uGTChain);
     TTreeReaderArray<bool> m_algoDecisionInitial(l1uGTReader, "m_algoDecisionInitial");
@@ -123,6 +123,12 @@ int rate(char const* input) {
     bool l1uGTdecision1;
     bool l1uGTdecision2;
     bool l1uGTdecision3;
+
+    vector<string> seeds={"L1_ZeroBias_copy","L1_ZDC1n_Bkp1_OR","L1_SingleJet8_ZDC1n_AsymXOR","L1_SingleJet12_ZDC1n_AsymXOR","L1_SingleJet16_ZDC1n_AsymXOR","L1_SingleJet20_ZDC1n_AsymXOR","L1_SingleJet24_ZDC1n_AsymXOR","L1_SingleJet28_ZDC1n_AsymXOR","L1_SingleJet8_ZDC1n_OR","L1_SingleJet12_ZDC1n_OR","L1_SingleJet16_ZDC1n_OR","L1_SingleJet20_ZDC1n_OR","L1_SingleJet24_ZDC1n_OR","L1_SingleJet28_ZDC1n_OR","L1_ZDC1n_AsymXOR","L1_ZDC1n_OR"};
+    bool l1uGTEmudecisions[16];
+    Double_t num[16];
+    Double_t ZBrate = 11245.6*1088;
+
 
     // read in l1UpgradeTree 
     TChain l1UpgChain("l1UpgradeTree/L1UpgradeTree");
@@ -185,10 +191,20 @@ int rate(char const* input) {
         l1uGTdecision3 = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
         if (l1uGTdecision2) zbnum++;
         if (l1uGTdecision3) sgmonum++;
+
+	for (int i=0;i<16;i++) {
+	    l1uGTEmudecisions[i]=m_algoDecisionInitial.At(SeedBit[seeds[i].c_str()]);
+	    if (l1uGTEmudecisions[i]) num[i]++;
+	}
+
     }
     cout << "L1_ZDC1n_Bkp1_OR rate: " << zdcnum << "/" << totalEvents << " = " << zdcnum/totalEvents << endl;
     cout << "L1_ZeroBias_copy rate: " << zbnum << "/" << totalEvents << " = " << zbnum/totalEvents << endl;
     cout << "L1_SingleMuOpen rate: " << sgmonum << "/" << totalEvents << " = " << sgmonum/totalEvents << endl;
+
+    for (int i=0;i<16;i++) {
+	cout << seeds[i].c_str() << " rate: " << num[i] << "/" << totalEvents << "*11245.6*1088 = " << num[i]/totalEvents*ZBrate << endl;
+    }
 
     // save histograms to file so I can look at them 
     TFile* fout = new TFile("results/sumZDCEt2.root", "recreate");
