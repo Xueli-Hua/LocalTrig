@@ -181,7 +181,7 @@ int rate(char const* input) {
         }
 
 	runNbHist.Fill(*runNb);
-
+	cout << "test" << endl;
         if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial_Emu.GetSize()) continue;  
         l1uGTdecision1 = m_algoDecisionInitial_Emu.At(SeedBit[seedzdc.c_str()]);
         l1uGTdecision2 = m_algoDecisionInitial_Emu.At(SeedBit[seedzb.c_str()]);
@@ -189,13 +189,13 @@ int rate(char const* input) {
         if (l1uGTdecision1) zdcnum++; 
         if (l1uGTdecision2) zbnum++;
         if (l1uGTdecision3) sgmonum++;
-
+	cout << "test" << endl;
 	for (int it=0;it<16;it++) {
 	    l1uGTEmudecisions[it]=m_algoDecisionInitial_Emu.At(SeedBit[seeds[it].c_str()]);
 	    l1uGTdecisions[it]=m_algoDecisionInitial_unpacker.At(SeedBit[seeds[it].c_str()]);
 	    if (l1uGTEmudecisions[it]) num[it]++;
 	}
-
+	cout << "test" << endl;
 	for (size_t j=0; j<(*unpackerSum).size(); j++){
 	    int unpackedBx   = (*unpackerBx)[j];
       	    int unpackedType = (*unpackerType)[j];
@@ -207,7 +207,7 @@ int rate(char const* input) {
 			else if (unpackedType == 27) hTrigvsSumPlus_unpacker.Fill(it,unpackedSum);
 		}
 	    }
-	}
+	}cout << "test" << endl;
 	for (size_t j = 0; j<(*emuSum).size(); j++){
       	    //int emBx       = (*emuBx)[j];
             int emType     = (*emuType)[j];
@@ -218,7 +218,7 @@ int rate(char const* input) {
 			else if (emType == 27) hTrigvsSumPlus_Emu.Fill(it,emSum);
 		}
 	    }
-        }
+        }cout << "test" << endl;
 
     }
     cout << "L1_ZDC1n_Bkp1_OR rate: " << zdcnum << "/" << totalEvents << " = " << zdcnum/totalEvents << endl;
