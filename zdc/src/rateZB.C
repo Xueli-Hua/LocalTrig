@@ -185,9 +185,7 @@ int rate(char const* input) {
 
 	for (int i=0;i<16;i++) {
 	    l1uGTEmudecisions[i]=m_algoDecisionInitial.At(SeedBit[seeds[i].c_str()]);
-	    if (l1uGTEmudecisions[i]) {
-		if (std::find(runRange.begin(), runRange.end(), *runNb) != runRange.end()) num[i]++;
-	    }
+	    if (l1uGTEmudecisions[i]) num[i]++;
 	}
 
     }
