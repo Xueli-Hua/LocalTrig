@@ -98,7 +98,7 @@ int rate(char const* input) {
     TTreeReader l1uGTReader(&l1uGTChain);
     TTreeReaderArray<bool> m_algoDecisionInitial_unpacker(l1uGTReader, "m_algoDecisionInitial");
     
-    (&l1uGTEmuChainForBit)->GetEntry(1);
+    (&l1uGTChainForBit)->GetEntry(1);
     TTree * ugtree = (&l1uGTChainForBit)->GetTree();
     TList * aliases = ugtree->GetListOfAliases();
     TIter iter(aliases);
@@ -209,7 +209,7 @@ int rate(char const* input) {
 	    }
 	}
 	for (size_t j = 0; j<(*emuSum).size(); j++){
-      	    int emBx       = (*emuBx)[j];
+      	    //int emBx       = (*emuBx)[j];
             int emType     = (*emuType)[j];
             int emSum      = ((*emuSum)[j])*2;
 	    for (int it=0;it<16;it++) {
