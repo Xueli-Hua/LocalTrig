@@ -1,10 +1,6 @@
-//
 /*
- * checkUnpacker.C: Macro to check that the unpacked sums and the emulated sums are equivalent.
- * Input: Folder of L1Ntuples
- * Output: A root file of histograms relevant to checking the unpacking. 
- * Authors: Hannah Bossi <hannah.bossi@cern.ch>, Gian Michele Innocenti, <gian.michele.innocenti@cern.ch> 
- * 9/10/23
+Input: Folder of L1Ntuples
+Output: A plot of the jet turn-ons with and with out L1 dR matching vs calo jet pT
 */
 
 #include "TFile.h"
@@ -23,160 +19,165 @@
 #include "TGraphAsymmErrors.h"
 #include "TCanvas.h"
 #include "TLegend.h"
+#include "TLine.h"
 
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
+
+#include <regex>
+#include <map>
 
 using namespace std;
 
+unsigned int ParseAlias(std::string alias)
+{
+  std::smatch base_match;
+  std::regex integer("L1uGT\\.m_algoDecisionInitial\\[([0-9]+)\\]");
+  unsigned int nbit = 0;
 
-void GetFiles(char const *input, vector<string> &files) {
-  TSystemDirectory dir(input, input);
-  TList *list = dir.GetListOfFiles();
+  if (std::regex_match(alias, base_match, integer))
+  {
+    nbit = std::stoi(base_match[1].str(), nullptr);
+  }
 
-  if (list) {
-    TSystemFile *file;
-    string fname;
-    TIter next(list);
-    while ((file = (TSystemFile *)next())) {
-      fname = file->GetName();
+  return nbit;
+}
 
-      if (file->IsDirectory() && (fname.find(".") == string::npos)) {
-        string newDir = string(input) + fname + "/";
-        GetFiles(newDir.c_str(), files);
-      } else if ((fname.find(".root") != string::npos)) {
-        files.push_back(string(input) + fname);
-        cout << files.back() << endl;
-      }
+void GetFiles(char const* input, vector<string>& files) {
+    TSystemDirectory dir(input, input);
+    TList *list = dir.GetListOfFiles();
+
+    if (list) {
+        TSystemFile *file;
+        string fname;
+        TIter next(list);
+        while ((file = (TSystemFile*) next())) {
+            fname = file->GetName();
+
+            if (file->IsDirectory() && (fname.find(".") == string::npos)) {
+                string newDir = string(input) + fname + "/";
+                GetFiles(newDir.c_str(), files);
+            }
+            else if ((fname.find(".root") != string::npos)) {
+                files.push_back(string(input) + fname);
+                cout << files.back() << endl;
+            }
+        }
     }
-  }
 
-  return;
+    return;
 }
 
-void FillChain(TChain &chain, vector<string> &files) {
-  for (auto file : files) {
-    chain.Add(file.c_str());
-  }
+//
+
+void FillChain(TChain& chain, vector<string>& files) {
+    for (auto file : files) {
+        chain.Add(file.c_str());
+    }
 }
+//
+int checkTrigFire(char const* input) {
+    // read in all files in the input folder 
+    vector<string> files;
+    GetFiles(input, files);
 
-// params
-// input: folder of l1ntuples to read from - must contain the branches specified above
-// verbose: whether or not to print out the full output (error messgaes will always be printed)
-int checkTriggerFires(
-		  char const *input = "/eos/cms/store/group/phys_heavyions/hbossi/RunPrep/Run374521/", bool verbose = false, bool doOnline = false) {
+    // read in L1uGTEmu information 
+    TChain l1uGTChainForBit("l1uGTEmuTree/L1uGTTree");
+    FillChain(l1uGTChainForBit, files);
 
+    TChain l1uGTEmuChain("l1uGTEmuTree/L1uGTTree");
+    FillChain(l1uGTEmuChain, files);
+    TTreeReader l1uGTEmuReader(&l1uGTEmuChain);
+    TTreeReaderArray<bool> m_algoDecisionInitial_Emu(l1uGTEmuReader, "m_algoDecisionInitial");
 
-  /* read in all files in the input folder */
-  vector<string> files;
-  GetFiles(input, files);
-
-  /* read in emulated information */
-  TChain emuChain("l1UpgradeEmuTree/L1UpgradeTree");
-  FillChain(emuChain, files);
-  TTreeReader emuReader(&emuChain);
-  TTreeReaderValue<vector<float> > emuSum(emuReader, "sumZDCEt");
-  TTreeReaderValue<vector<short>> emuType(emuReader, "sumZDCType"); 
-  TTreeReaderValue<vector<float>>	emuBx(emuReader, "sumZDCBx");
-
-  /* read in the unpacked information */
-  TChain unpackerChain("l1UpgradeTree/L1UpgradeTree");
-  FillChain(unpackerChain, files);
-  TTreeReader unpackerReader(&unpackerChain);
-  TTreeReaderValue<vector<float> > unpackerSum(unpackerReader, "sumZDCEt");
-  TTreeReaderValue<vector<short>>	unpackerType(unpackerReader, "sumZDCType");
-  TTreeReaderValue<vector<float>>	unpackerBx(unpackerReader, "sumZDCBx");
-
-    /* read in trigger information */
-  TChain trigChain("hltanalysis/HltTree");
-  FillChain(trigChain, files);
-  TTreeReader trigReader(&trigChain);
-  TTreeReaderValue<int> zb(trigReader, "L1_ZeroBias");
-  
-  // zdc and
-  // TTreeReaderValue<int> zdcAND22(trigReader, "L1_ZDC22_AND_BptxAND"); 
-  // TTreeReaderValue<int> zdcAND80(trigReader, "L1_ZDC80_AND_BptxAND"); 
-  // TTreeReaderValue<int> zdcAND133(trigReader, "L1_ZDC133_AND_BptxAND");
-
-  // zdc or 
-  // TTreeReaderValue<int> zdcOR22(trigReader, "L1_ZDC22_OR_BptxAND"); 
-  // TTreeReaderValue<int> zdcOR80(trigReader, "L1_ZDC80_OR_BptxAND"); 
-  // TTreeReaderValue<int> zdcOR133(trigReader, "L1_ZDC133_OR_BptxAND");
-
-  // // zdc minus
-  // TTreeReaderValue<int> zdcMinusAND22(trigReader, "L1_ZDCM22");
-  // TTreeReaderValue<int> zdcMinusAND80(trigReader, "L1_ZDCM80");
-  // TTreeReaderValue<int> zdcMinusAND133(trigReader, "L1_ZDCM133");
-
-  // // zdc plus
-  // TTreeReaderValue<int> zdcPlusAND22(trigReader, "L1_ZDCP22");
-  // TTreeReaderValue<int> zdcPlusAND80(trigReader, "L1_ZDCP80");
-  // TTreeReaderValue<int> zdcPlusAND133(trigReader, "L1_ZDCP133");
-
-  // // not HF AND 
-  // TTreeReaderValue<int> notHFAND_Jet8(trigReader, "L1_SingleJet8_NotMinimumBiasHF2_AND_BptxAND");
-  // TTreeReaderValue<int> notHFAND_Jet16(trigReader, "L1_SingleJet16_NotMinimumBiasHF2_AND_BptxAND");
-  // TTreeReaderValue<int> notHFAND_Jet20(trigReader, "L1_SingleJet20_NotMinimumBiasHF2_AND_BptxAND");
-  // TTreeReaderValue<int> notHFAND_Jet24(trigReader, "L1_SingleJet24_NotMinimumBiasHF2_AND_BptxAND");
-  // TTreeReaderValue<int> notHFAND_Jet28(trigReader, "L1_SingleJet28_NotMinimumBiasHF2_AND_BptxAND");
-
-  /* read in the event information to get the global Bx*/
-  TChain eventChain("l1EventTree/L1EventTree");
-  FillChain(eventChain, files);
-  TTreeReader eventReader(&eventChain);
-  TTreeReaderValue<UInt_t> eventbx(eventReader, "bx");
-
-  /* read in information on the emulated trigger fires*/
-  TChain l1TrigChain("l1uGTTree/L1uGTTree");
-  FillChain(l1TrigChain, files);
-  TTreeReader emuTrigReader(&l1TrigChain);
-  TTreeReaderValue<vector<bool>> initialTrigDecision(emuTrigReader, "m_algoDecisionInitial");
- 
- 
-  /* create histograms */
-  TH1D* hZDCP22 = new TH1D("hZDCP22", "ZDC Plus 22", 1024, -0.5, 1023.5);
-  TH1D* hZDCM22 = new TH1D("hZDCM22", "ZDC Minus 22", 1024, -0.5, 1023.5);
-
-
-
-  Long64_t totalEvents = unpackerReader.GetEntries(true);
-  for (Long64_t i = 0; i < totalEvents; i++) {
-    emuReader.Next(); unpackerReader.Next(); eventReader.Next(); emuTrigReader.Next(); trigReader.Next();
-
-    if(!doOnline){
-      if((*initialTrigDecision)[500] == 1 ){
-
-          hZDCP22->Fill((*emuSum)[4]*2);            
-      }
-      else if ((*initialTrigDecision)[503] == 1){
-          hZDCM22->Fill((*emuSum)[5]*2);
-      }
-
+    // read in L1uGT information 
+    TChain l1uGTChain("l1uGTTree/L1uGTTree");
+    FillChain(l1uGTChain, files);
+    TTreeReader l1uGTReader(&l1uGTChain);
+    TTreeReaderArray<bool> m_algoDecisionInitial_unpacker(l1uGTReader, "m_algoDecisionInitial");
+    
+    (&l1uGTChainForBit)->GetEntry(1);
+    TTree * ugtree = (&l1uGTChainForBit)->GetTree();
+    TList * aliases = ugtree->GetListOfAliases();
+    TIter iter(aliases);
+    std::vector<std::string> names;
+    std::for_each(iter.Begin(), TIter::End(), [&](TObject* alias){ names.push_back(alias->GetName()); } );
+    std::map<std::string, std::string> SeedAlias;
+    for (auto const & name: names) {
+      SeedAlias[name] = l1uGTChainForBit.GetAlias(name.c_str());
     }
     
-  
+    std::map<std::string, std::string> XMLConv; 
+    std::map<std::string, unsigned int> SeedBit;
+    for (auto const & name: SeedAlias) {
+      if (XMLConv.find(name.first) != XMLConv.end())
+        SeedBit[XMLConv[name.first]] = ParseAlias(name.second);
+      else
+        SeedBit[name.first] = ParseAlias(name.second);
+    }
 
+    /*ofstream trignames;
+    trignames.open("results/trigs.txt");
+    for (auto const & name: names) trignames << name.c_str() << endl;
+    trignames.close();*/
+    
+    string seedzdc = "L1_ZDC1n_Bkp1_OR"; 
+    if (SeedBit.find(seedzdc.c_str()) == SeedBit.end()) return false;
+    bool l1uGTdecision1;
 
+    // read in emulated information
+    TChain emuChain("l1UpgradeEmuTree/L1UpgradeTree");
+    FillChain(emuChain, files);
+    TTreeReader emuReader(&emuChain);
+    TTreeReaderValue<vector<float> > emuSum(emuReader, "sumZDCEt");
+	 
+    // read in l1UpgradeTree 
+    TChain unpackerChain("l1UpgradeTree/L1UpgradeTree");
+    FillChain(unpackerChain, files);
+    TTreeReader unpackerReader(&unpackerChain);
+    TTreeReaderValue<vector<float> > unpackerSum(unpackerReader, "sumZDCEt");
+	 
+    // read in l1EventTree
+    TChain l1EvtChain("l1EventTree/L1EventTree");
+    FillChain(l1EvtChain, files);
+    TTreeReader l1EvtReader(&l1EvtChain);
+    //TTreeReaderValue<UInt_t> runNb(l1EvtReader, "run");
+	 
+    Long64_t totalEvents = l1uGTReader.GetEntries(true);
+    // read in information from TTrees 
+    for (Long64_t i = 0; i < totalEvents; i++) {
+        l1uGTReader.Next();l1uGTEmuReader.Next();unpackerReader.Next();emuReader.Next();l1EvtReader.Next();
+        if (i % 200000 == 0) { 
+            cout << "Entry: " << i << " / " <<  totalEvents << endl; 
+        }
+	
+	
+        if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial_Emu.GetSize()) continue;  
+        l1uGTdecision1 = m_algoDecisionInitial_Emu.At(SeedBit[seedzdc.c_str()]);
+        if (l1uGTdecision1) zdcnum++; 
 
+    }
+    }
 
-  } // end loop over  the  number of events
-
-
-  TFile* outfile = new TFile("Run374521_ZDCTriggerCheck.root","RECREATE");
-  outfile->cd();
-  hZDCP22->Write();
-  hZDCM22->Write();
-  outfile->Close();
-
-  return 1;
+    // save histograms to file so I can look at them 
+    TFile* fout = new TFile("results/runNb.root", "recreate");
+    runNbHist.Write(); 
+    hTrigvsSumMinus_unpacker.Write();
+    hTrigvsSumPlus_unpacker.Write();
+    hTrigvsSumMinus_Emu.Write();
+    hTrigvsSumPlus_Emu.Write();
+    fout->Close();
+   
+    return 0;
 }
 
-int main(int argc, char *argv[]) {
-  if (argc == 2)
-    return checkTriggerFires(argv[1]);
-  else {
-    cout << "ERROR" << endl;
-    return -1;
-  }
+int main(int argc, char* argv[]) {
+    if (argc == 2)
+        return rate(argv[1]);
+    else {
+        cout << "ERROR" << endl;
+        return -1;
+    }
 }
