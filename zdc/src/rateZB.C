@@ -82,16 +82,22 @@ int rate(char const* input) {
     vector<string> files;
     GetFiles(input, files);
 
-    // read in L1uGT information 
-    TChain l1uGTChainForBit("l1uGTEmuTree/L1uGTTree");
-    FillChain(l1uGTChainForBit, files);
+    // read in L1uGTEmu information 
+    TChain l1uGTEmuChainForBit("l1uGTEmuTree/L1uGTTree");
+    FillChain(l1uGTEmuChainForBit, files);
 
-    TChain l1uGTChain("l1uGTEmuTree/L1uGTTree");
+    TChain l1uGTEmuChain("l1uGTEmuTree/L1uGTTree");
+    FillChain(l1uGTEmuChain, files);
+    TTreeReader l1uGTEmuReader(&l1uGTEmuChain);
+    TTreeReaderArray<bool> m_algoDecisionInitial_Emu(l1uGTEmuReader, "m_algoDecisionInitial");
+
+    // read in L1uGT information 
+    TChain l1uGTChain("l1uGTTree/L1uGTTree");
     FillChain(l1uGTChain, files);
     TTreeReader l1uGTReader(&l1uGTChain);
-    TTreeReaderArray<bool> m_algoDecisionInitial(l1uGTReader, "m_algoDecisionInitial");
+    TTreeReaderArray<bool> m_algoDecisionInitial_unpacker(l1uGTReader, "m_algoDecisionInitial");
     
-    (&l1uGTChainForBit)->GetEntry(1);
+    (&l1uGTEmuChainForBit)->GetEntry(1);
     TTree * ugtree = (&l1uGTChainForBit)->GetTree();
     TList * aliases = ugtree->GetListOfAliases();
     TIter iter(aliases);
@@ -126,15 +132,25 @@ int rate(char const* input) {
 
     vector<string> seeds={"L1_ZeroBias_copy","L1_ZDC1n_Bkp1_OR","L1_SingleJet8_ZDC1n_AsymXOR","L1_SingleJet12_ZDC1n_AsymXOR","L1_SingleJet16_ZDC1n_AsymXOR","L1_SingleJet20_ZDC1n_AsymXOR","L1_SingleJet24_ZDC1n_AsymXOR","L1_SingleJet28_ZDC1n_AsymXOR","L1_SingleJet8_ZDC1n_OR","L1_SingleJet12_ZDC1n_OR","L1_SingleJet16_ZDC1n_OR","L1_SingleJet20_ZDC1n_OR","L1_SingleJet24_ZDC1n_OR","L1_SingleJet28_ZDC1n_OR","L1_ZDC1n_AsymXOR","L1_ZDC1n_OR"};
     bool l1uGTEmudecisions[16];
+    bool l1uGTdecisions[16];
     Double_t num[16];
     vector<UInt_t> runRange = {375245,375252,375256,375259,375300,375317,375413,375441,375448,375455,375463,375658,375665,375697,375703};
 
+    // read in emulated information
+    TChain emuChain("l1UpgradeEmuTree/L1UpgradeTree");
+    FillChain(emuChain, files);
+    TTreeReader emuReader(&emuChain);
+    TTreeReaderValue<vector<float> > emuSum(emuReader, "sumZDCEt");
+    TTreeReaderValue<vector<short>> emuType(emuReader, "sumZDCType"); 
+    TTreeReaderValue<vector<float>>	emuBx(emuReader, "sumZDCBx");
+
     // read in l1UpgradeTree 
-    TChain l1UpgChain("l1UpgradeTree/L1UpgradeTree");
-    FillChain(l1UpgChain, files);
-    TTreeReader l1UpgReader(&l1UpgChain);
-    TTreeReaderArray<float> sumZDCEt(l1UpgReader, "sumZDCEt");
-    TTreeReaderValue<unsigned short> nSumsZDC(l1UpgReader, "nSumsZDC");
+    TChain unpackerChain("l1UpgradeTree/L1UpgradeTree");
+    FillChain(unpackerChain, files);
+    TTreeReader unpackerReader(&unpackerChain);
+    TTreeReaderValue<vector<float> > unpackerSum(unpackerReader, "sumZDCEt");
+    TTreeReaderValue<vector<short>>	unpackerType(unpackerReader, "sumZDCType");
+    TTreeReaderValue<vector<float>>	unpackerBx(unpackerReader, "sumZDCBx");
 
     // read in l1EventTree
     TChain l1EvtChain("l1EventTree/L1EventTree");
@@ -146,10 +162,11 @@ int rate(char const* input) {
     //int nbins = 200;
     float min = 0;
     //float max = 2000;
-    TH1F sumZDCEtHist("sumZDCEt", "", 140, min, 1400);
-    TH1D *sumPlusEmuHist = new TH1D("sumPlusEmu", "sumPlusEmu", 5000, 0, 10000);
-    TH1D *sumMinusEmuHist = new TH1D("sumMinusEmu", "sumMinusEmu", 5000, 0, 10000);
     TH1F runNbHist("runNb","runNb",900,374900,375800);
+    TH2F hTrigvsSumMinus_unpacker("hTrigvsSumMinus_unpacker","hTrigvsSumMinus_unpacker",16,0,16,5000, 0, 500);
+    TH2F hTrigvsSumPlus_unpacker("hTrigvsSumPlus_unpacker","hTrigvsSumPlus_unpacker",16,0,16,5000, 0, 500);
+    TH2F hTrigvsSumMinus_Emu("hTrigvsSumMinus_Emu","hTrigvsSumMinus_Emu",16,0,16,5000, 0, 500);
+    TH2F hTrigvsSumPlus_Emu("hTrigvsSumPlus_Emu","hTrigvsSumPlus_Emu",16,0,16,5000, 0, 500);
 
     Double_t zdcnum=0;
     Double_t zbnum=0;
@@ -157,36 +174,50 @@ int rate(char const* input) {
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
     for (Long64_t i = 0; i < totalEvents; i++) {
-        l1uGTReader.Next();l1UpgReader.Next();l1EvtReader.Next();
+        l1uGTReader.Next();unpackerReader.Next();emuReader.Next;l1EvtReader.Next();
         if (i % 200000 == 0) { 
             cout << "Entry: " << i << " / " <<  totalEvents << endl; 
         }
 
 	runNbHist.Fill(*runNb);
 
-        if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial.GetSize()) continue;  
-        l1uGTdecision1 = m_algoDecisionInitial.At(SeedBit[seedzdc.c_str()]);
-        if (l1uGTdecision1) {
-            zdcnum++;
-            for (int izdc = 0; izdc < *nSumsZDC; ++izdc) {
-            sumZDCEtHist.Fill(sumZDCEt[izdc]);
-            }
-        }
-
-        int sumPInt = sumZDCEt[3]*2;
-        int sumNInt = sumZDCEt[4]*2;
-        sumMinusEmuHist->Fill(sumNInt); 
-        sumPlusEmuHist->Fill(sumPInt); 
-        
-        l1uGTdecision2 = m_algoDecisionInitial.At(SeedBit[seedzb.c_str()]);
-        l1uGTdecision3 = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
+        if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial_Emu.GetSize()) continue;  
+        l1uGTdecision1 = m_algoDecisionInitial_Emu.At(SeedBit[seedzdc.c_str()]);
+        l1uGTdecision2 = m_algoDecisionInitial_Emu.At(SeedBit[seedzb.c_str()]);
+        l1uGTdecision3 = m_algoDecisionInitial_Emu.At(SeedBit[seedsgmo.c_str()]);
+        if (l1uGTdecision1) zdcnum++; 
         if (l1uGTdecision2) zbnum++;
         if (l1uGTdecision3) sgmonum++;
 
-	for (int i=0;i<16;i++) {
-	    l1uGTEmudecisions[i]=m_algoDecisionInitial.At(SeedBit[seeds[i].c_str()]);
-	    if (l1uGTEmudecisions[i]) num[i]++;
+	for (int it=0;it<16;it++) {
+	    l1uGTEmudecisions[it]=m_algoDecisionInitial_Emu.At(SeedBit[seeds[it].c_str()]);
+	    l1uGTdecisions[it]=m_algoDecisionInitial_unpacker.At(SeedBit[seeds[it].c_str()]);
+	    if (l1uGTEmudecisions[it]) num[it]++;
 	}
+
+	for (size_t j=0; j<(*unpackerSum).size(); j++){
+	    int unpackedBx   = (*unpackerBx)[j];
+      	    int unpackedType = (*unpackerType)[j];
+            int unpackedSum  = (*unpackerSum)[j]*2;
+	    if(unpackedBx == -2) continue; 
+	    for (int it=0;it<16;it++) {
+	        if (l1uGTdecisions[it]) {
+			if (unpackedType == 28) hTrigvsSumMinus_unpacker.Fill(it,unpackedSum);
+			else if (unpackedType == 27) hTrigvsSumPlus_unpacker.Fill(it,unpackedSum);
+		}
+	    }
+	}
+	for (size_t j = 0; j<(*emuSum).size(); j++){
+      	    int emBx       = (*emuBx)[j];
+            int emType     = (*emuType)[j];
+            int emSum      = ((*emuSum)[j])*2;
+	    for (int it=0;it<16;it++) {
+	        if (l1uGTEmudecisions[it]) {
+			if (unpackedType == 28) hTrigvsSumMinus_Emu.Fill(it,emSum);
+			else if (unpackedType == 27) hTrigvsSumPlus_Emu.Fill(it,emSum);
+		}
+	    }
+        }
 
     }
     cout << "L1_ZDC1n_Bkp1_OR rate: " << zdcnum << "/" << totalEvents << " = " << zdcnum/totalEvents << endl;
@@ -201,9 +232,11 @@ int rate(char const* input) {
 
     // save histograms to file so I can look at them 
     TFile* fout = new TFile("results/runNb.root", "recreate");
-    sumPlusEmuHist->Write(); 
-    sumMinusEmuHist->Write(); 
     runNbHist.Write(); 
+    hTrigvsSumMinus_unpacker.Write();
+    hTrigvsSumPlus_unpacker.Write();
+    hTrigvsSumMinus_Emu.Write();
+    hTrigvsSumPlus_Emu.Write();
     fout->Close();
    
     return 0;
