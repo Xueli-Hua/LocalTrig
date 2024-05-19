@@ -161,7 +161,7 @@ int rate(char const* input) {
 
     // create histograms for efficiency plots 
     //int nbins = 200;
-    float min = 0;
+    //float min = 0;
     //float max = 2000;
     TH1F runNbHist("runNb","runNb",900,374900,375800);
     TH2F hTrigvsSumMinus_unpacker("hTrigvsSumMinus_unpacker","hTrigvsSumMinus_unpacker",16,0,16,5000, 0, 500);
@@ -175,7 +175,7 @@ int rate(char const* input) {
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
     for (Long64_t i = 0; i < totalEvents; i++) {
-        l1uGTReader.Next();unpackerReader.Next();emuReader.Next;l1EvtReader.Next();
+        l1uGTReader.Next();unpackerReader.Next();emuReader.Next();l1EvtReader.Next();
         if (i % 200000 == 0) { 
             cout << "Entry: " << i << " / " <<  totalEvents << endl; 
         }
@@ -214,8 +214,8 @@ int rate(char const* input) {
             int emSum      = ((*emuSum)[j])*2;
 	    for (int it=0;it<16;it++) {
 	        if (l1uGTEmudecisions[it]) {
-			if (unpackedType == 28) hTrigvsSumMinus_Emu.Fill(it,emSum);
-			else if (unpackedType == 27) hTrigvsSumPlus_Emu.Fill(it,emSum);
+			if (emType == 28) hTrigvsSumMinus_Emu.Fill(it,emSum);
+			else if (emType == 27) hTrigvsSumPlus_Emu.Fill(it,emSum);
 		}
 	    }
         }
