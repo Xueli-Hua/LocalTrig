@@ -84,8 +84,8 @@ int rate(char const* input) {
     GetFiles(input, files);
 
     // read in L1uGTEmu information 
-    TChain l1uGTEmuChainForBit("l1uGTEmuTree/L1uGTTree");
-    FillChain(l1uGTEmuChainForBit, files);
+    TChain l1uGTChainForBit("l1uGTEmuTree/L1uGTTree");
+    FillChain(l1uGTChainForBit, files);
 
     TChain l1uGTEmuChain("l1uGTEmuTree/L1uGTTree");
     FillChain(l1uGTEmuChain, files);
