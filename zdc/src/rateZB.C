@@ -136,7 +136,7 @@ int rate(char const* input) {
     bool l1uGTdecisions[16];
     Double_t num[16];
     vector<UInt_t> runRange = {375245,375252,375256,375259,375300,375317,375413,375441,375448,375455,375463,375658,375665,375697,375703};
-
+    cout << "test" << endl;
     // read in emulated information
     TChain emuChain("l1UpgradeEmuTree/L1UpgradeTree");
     FillChain(emuChain, files);
@@ -144,7 +144,7 @@ int rate(char const* input) {
     TTreeReaderValue<vector<float> > emuSum(emuReader, "sumZDCEt");
     TTreeReaderValue<vector<short>> emuType(emuReader, "sumZDCType"); 
     TTreeReaderValue<vector<float>>	emuBx(emuReader, "sumZDCBx");
-
+	 cout << "test" << endl;
     // read in l1UpgradeTree 
     TChain unpackerChain("l1UpgradeTree/L1UpgradeTree");
     FillChain(unpackerChain, files);
@@ -152,13 +152,13 @@ int rate(char const* input) {
     TTreeReaderValue<vector<float> > unpackerSum(unpackerReader, "sumZDCEt");
     TTreeReaderValue<vector<short>>	unpackerType(unpackerReader, "sumZDCType");
     TTreeReaderValue<vector<float>>	unpackerBx(unpackerReader, "sumZDCBx");
-
+	 cout << "test" << endl;
     // read in l1EventTree
     TChain l1EvtChain("l1EventTree/L1EventTree");
     FillChain(l1EvtChain, files);
     TTreeReader l1EvtReader(&l1EvtChain);
     TTreeReaderValue<UInt_t> runNb(l1EvtReader, "run");
-
+	 cout << "test" << endl;
     // create histograms for efficiency plots 
     //int nbins = 200;
     //float min = 0;
@@ -168,7 +168,7 @@ int rate(char const* input) {
     TH2F hTrigvsSumPlus_unpacker("hTrigvsSumPlus_unpacker","hTrigvsSumPlus_unpacker",16,0,16,5000, 0, 500);
     TH2F hTrigvsSumMinus_Emu("hTrigvsSumMinus_Emu","hTrigvsSumMinus_Emu",16,0,16,5000, 0, 500);
     TH2F hTrigvsSumPlus_Emu("hTrigvsSumPlus_Emu","hTrigvsSumPlus_Emu",16,0,16,5000, 0, 500);
-
+	 cout << "test" << endl;
     Double_t zdcnum=0;
     Double_t zbnum=0;
     Double_t sgmonum=0;
