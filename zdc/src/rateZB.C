@@ -15,6 +15,7 @@ Output: A plot of the jet turn-ons with and with out L1 dR matching vs calo jet 
 
 #include "TMath.h"
 #include "TH1F.h"
+#include "TH2F.h"
 #include "TGraphAsymmErrors.h"
 #include "TCanvas.h"
 #include "TLegend.h"
