@@ -195,10 +195,10 @@ int rate(char const* input) {
         if (l1uGTdecision3) sgmonum++;
 	
 	for (int it=0;it<16;it++) {
-	    hlumi[it].Fill(*lumi);
 	    l1uGTEmudecisions[it]=m_algoDecisionInitial_Emu.At(SeedBit[seeds[it].c_str()]);
 	    l1uGTdecisions[it]=m_algoDecisionInitial_unpacker.At(SeedBit[seeds[it].c_str()]);
 	    if (l1uGTEmudecisions[it]) {
+		num[i]++;
 		hlumi_itrig[it].Fill(*lumi);
 	    }
 	}
@@ -245,7 +245,7 @@ int rate(char const* input) {
     hTrigvsSumPlus_unpacker.Write();
     hTrigvsSumMinus_Emu.Write();
     hTrigvsSumPlus_Emu.Write();
-    hlumi.SetName(("hlumi");
+    hlumi.SetName("hlumi");
     hlumi.Write();
     for (int it=0;it<16;it++) {
 	hlumi_itrig[it].SetName(("hlumi_itrig"+to_string(it)).c_str());
