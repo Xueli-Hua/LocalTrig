@@ -128,13 +128,16 @@ int checkTrigFire(char const* input) {
     TChain emuChain("l1UpgradeEmuTree/L1UpgradeTree");
     FillChain(emuChain, files);
     TTreeReader emuReader(&emuChain);
-    TTreeReaderValue<vector<float> > emuSum(emuReader, "sumZDCEt");
+    TTreeReaderValue<vector<float>> emuSum(emuReader, "sumZDCEt");
+    TTreeReaderValue<vector<float>> emuJetPt(emuReader, "jetEt");
 	 
     // read in l1UpgradeTree 
     TChain unpackerChain("l1UpgradeTree/L1UpgradeTree");
     FillChain(unpackerChain, files);
     TTreeReader unpackerReader(&unpackerChain);
-    TTreeReaderValue<vector<float> > unpackerSum(unpackerReader, "sumZDCEt");
+    TTreeReaderValue<vector<float>> unpackerSum(unpackerReader, "sumZDCEt");
+    TTreeReaderValue<vector<float>> unpackerJetPt(unpackerReader, "jetEt");
+    
 
     /* create histograms */
     TH1D hZDCP22_emu("hZDCP22_emu", "ZDC Plus 22", 1024, -0.5, 1023.5);
@@ -146,6 +149,11 @@ int checkTrigFire(char const* input) {
     TH1D hZDCP22_unpacker_trig("hZDCP22_unpacker_trig", "ZDC Plus 22", 1024, -0.5, 1023.5);
     TH1D hZDCM22_unpacker_trig("hZDCM22_unpacker_trig", "ZDC Minus 22", 1024, -0.5, 1023.5);
 
+    TH1D hJet28_emu("hJet28_emu", "Single Jet 28", 1024, -0.5, 1023.5);
+    TH1D hJet28_emu_trig("hJet28_emu_trig", "Single Jet 28", 1024, -0.5, 1023.5);
+    TH1D hJet28_unpacker("hJet28_unpacker", "Single Jet 28", 1024, -0.5, 1023.5);
+    TH1D hJet28_unpacker_trig("hJet28_unpacker_trig", "Single Jet 28", 1024, -0.5, 1023.5);
+
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
     for (Long64_t i = 0; i < totalEvents; i++) {
@@ -153,6 +161,9 @@ int checkTrigFire(char const* input) {
         if (i % 200000 == 0) { 
             cout << "Entry: " << i << " / " <<  totalEvents << endl; 
         }
+
+	//==============================================================================
+	//for ZDCP and ZDCM trigger fires
 	hZDCP22_emu.Fill((*emuSum)[4]*2);
 	hZDCM22_emu.Fill((*emuSum)[5]*2);
 	hZDCP22_unpacker.Fill((*unpackerSum)[5]*2);
@@ -166,6 +177,25 @@ int checkTrigFire(char const* input) {
         if (l1uGTZDCM22_emu) hZDCM22_emu_trig.Fill((*emuSum)[5]*2);
 	if (l1uGTZDCP22_unpacker) hZDCP22_unpacker_trig.Fill((*unpackerSum)[5]*2);
         if (l1uGTZDCM22_unpacker) hZDCM22_unpacker_trig.Fill((*unpackerSum)[4]*2);
+	//==============================================================================
+
+	//==============================================================================
+	//for Single Jet trigger fires
+	float emuMaxJetPt = -999;
+	/* iterate through emu jets and find matched and unmatched jets with max pT */
+    	for (size_t j = 0; j < (*emuJetPt).size(); ++j) {
+            if ((*emuJetPt)[j] > emuMaxJetPt) emuMaxJetPt = (*emuJetPt)[j];
+        }
+	hJet28_emu.Fill(emuMaxJetPt);
+	hJet28_unpacker.Fill(emuMaxJetPt);
+
+	l1uGTJet28_emu = m_algoDecisionInitial_Emu.At(SeedBit["L1_SingleJet28"]);
+	l1uGTJet28_unpacker = m_algoDecisionInitial_unpacker.At(SeedBit["L1_SingleJet28"]);
+	if (l1uGTJet28_emu) hJet28_emu_trig.Fill(emuMaxJetPt);
+	if (l1uGTJet28_unpacker) hJet28_unpacker_trig.Fill(emuMaxJetPt);
+	//==============================================================================
+
+    }
 
 
     }
@@ -180,6 +210,11 @@ int checkTrigFire(char const* input) {
     hZDCM22_unpacker.Write(); 
     hZDCP22_unpacker_trig.Write(); 
     hZDCM22_unpacker_trig.Write(); 
+
+    hJet28_emu.Write();
+    hJet28_unpacker.Write();
+    hJet28_emu_trig.Write();
+    hJet28_unpacker_trig.Write();
     fout->Close();
    
     return 0;
