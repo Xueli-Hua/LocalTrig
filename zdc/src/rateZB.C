@@ -158,6 +158,7 @@ int rate(char const* input) {
     FillChain(l1EvtChain, files);
     TTreeReader l1EvtReader(&l1EvtChain);
     TTreeReaderValue<UInt_t> runNb(l1EvtReader, "run");
+    TTreeReaderValue<UInt_t> lumi(l1EvtReader, "lumi");
 	 
     // create histograms for efficiency plots 
     //int nbins = 200;
@@ -168,13 +169,15 @@ int rate(char const* input) {
     TH2F hTrigvsSumPlus_unpacker("hTrigvsSumPlus_unpacker","hTrigvsSumPlus_unpacker",16,0,16,5000, 0, 500);
     TH2F hTrigvsSumMinus_Emu("hTrigvsSumMinus_Emu","hTrigvsSumMinus_Emu",16,0,16,5000, 0, 500);
     TH2F hTrigvsSumPlus_Emu("hTrigvsSumPlus_Emu","hTrigvsSumPlus_Emu",16,0,16,5000, 0, 500);
+    TH1F hlumi[16];
+    TH1F hlumi_itrig[16];
 	 
     Double_t zdcnum=0;
     Double_t zbnum=0;
     Double_t sgmonum=0;
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
-    for (Long64_t i = 0; i < totalEvents; i++) {
+    for (Long64_t i = 0; i < 1000000; i++) {
         l1uGTReader.Next();l1uGTEmuReader.Next();unpackerReader.Next();emuReader.Next();l1EvtReader.Next();
         if (i % 200000 == 0) { 
             cout << "Entry: " << i << " / " <<  totalEvents << endl; 
@@ -191,9 +194,13 @@ int rate(char const* input) {
         if (l1uGTdecision3) sgmonum++;
 	
 	for (int it=0;it<16;it++) {
+	    hlumi[it].Fill(*lumi);
 	    l1uGTEmudecisions[it]=m_algoDecisionInitial_Emu.At(SeedBit[seeds[it].c_str()]);
 	    l1uGTdecisions[it]=m_algoDecisionInitial_unpacker.At(SeedBit[seeds[it].c_str()]);
-	    if (l1uGTEmudecisions[it]) num[it]++;
+	    if (l1uGTEmudecisions[it]) {
+		num[it]++;
+		hlumi_itrig[it].Fill(*lumi);
+	    }
 	}
 	
 	for (size_t j=0; j<(*unpackerSum).size(); j++){
@@ -238,6 +245,10 @@ int rate(char const* input) {
     hTrigvsSumPlus_unpacker.Write();
     hTrigvsSumMinus_Emu.Write();
     hTrigvsSumPlus_Emu.Write();
+    for (int it=0;it<16;it++) {
+	hlumi[it].Write();
+	hlumi_itrig[it].Write();
+    }
     fout->Close();
    
     return 0;
