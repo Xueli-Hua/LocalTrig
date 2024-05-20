@@ -200,7 +200,7 @@ int checkTrigFire(char const* input) {
     }
 
     // save histograms to file so I can look at them 
-    TFile* fout = new TFile("results/checkTrigFire.root", "recreate");
+    TFile* fout = new TFile("results/checkTrigFire_ZBv2.root", "recreate");
     hZDCP22_emu.Write(); 
     hZDCM22_emu.Write(); 
     hZDCP22_emu_trig.Write(); 

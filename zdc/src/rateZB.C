@@ -244,7 +244,7 @@ int rate(char const* input) {
     }
 
     // plot the rates vs lumi 
-    TCanvas lumiCanvas("lumiCanvas", "", 0, 0, 800, 600);
+    /*TCanvas lumiCanvas("lumiCanvas", "", 0, 0, 800, 600);
     TLegend lumiLegend(0.13, 0.12 ,0.88, 0.2);
     TGraphAsymmErrors ZDCRate[16];
     for (int it=0;it<16;it++) {
@@ -272,10 +272,10 @@ int rate(char const* input) {
     	lumiLegend.SetHeader(seeds[it].c_str());
     	lumiLegend.Draw();
 	lumiCanvas.SaveAs(("results/plots/Rate_"+seeds[it]+".png").c_str());
-    }
+    }*/
 
     // save histograms to file so I can look at them 
-    TFile* fout = new TFile("results/runNb.root", "recreate");
+    TFile* fout = new TFile("results/runNb_ZBv2.root", "recreate");
     runNbHist.Write(); 
     hTrigvsSumMinus_unpacker.Write();
     hTrigvsSumPlus_unpacker.Write();

@@ -248,7 +248,7 @@ int checkUnpacker(
   std::cout << "Number of events with unpacker errors: " << unpackerErrors << std::endl;
   std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 
-  TFile* outfile = new TFile("unpackerTest_Run374106_FullSample.root","RECREATE");
+  TFile* outfile = new TFile("/eos/cms/store/group/phys_heavyions/xueli/HIZeroBias0/ZDCEmu_HIZeroBias_LUTv1_OOTPU_2/unpackerTest_Run374106_FullSample.root","RECREATE");
   unpackerTest->Write();
   sumPlusCorr->Write(); 
   sumMinusCorr->Write();
