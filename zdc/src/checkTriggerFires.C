@@ -14,8 +14,8 @@ Output: A plot of the jet turn-ons with and with out L1 dR matching vs calo jet 
 #include "TChain.h"
 
 #include "TMath.h"
-#include "TH1F.h"
-#include "TH2F.h"
+#include "TH1D.h"
+#include "TH2D.h"
 #include "TGraphAsymmErrors.h"
 #include "TCanvas.h"
 #include "TLegend.h"
@@ -154,12 +154,12 @@ int checkTrigFire(char const* input) {
         l1uGTZDCM22_emu = m_algoDecisionInitial_Emu.At(SeedBit["L1_ZDCM22"]);
         l1uGTZDCP22_unpacker = m_algoDecisionInitial_unpacker.At(SeedBit["L1_ZDCP22"]);
         l1uGTZDCM22_unpacker = m_algoDecisionInitial_unpacker.At(SeedBit["L1_ZDCM22"]);
-        if (l1uGTZDCP22_emu) hZDCP22_emu->Fill((*emuSum)[4]*2);
-        if (l1uGTZDCM22_emu) hZDCM22_emu->Fill((*emuSum)[5]*2);
-	if (l1uGTZDCP22_unpacker) hZDCP22_unpacker->Fill((*unpackerSum)[4]*2);
-        if (l1uGTZDCM22_unpacker) hZDCM22_unpacker->Fill((*unpackerSum)[5]*2);
+        if (l1uGTZDCP22_emu) hZDCP22_emu.Fill((*emuSum)[4]*2);
+        if (l1uGTZDCM22_emu) hZDCM22_emu.Fill((*emuSum)[5]*2);
+	if (l1uGTZDCP22_unpacker) hZDCP22_unpacker.Fill((*unpackerSum)[4]*2);
+        if (l1uGTZDCM22_unpacker) hZDCM22_unpacker.Fill((*unpackerSum)[5]*2);
 
-    }
+
     }
 
     // save histograms to file so I can look at them 
