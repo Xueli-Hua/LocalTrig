@@ -250,6 +250,7 @@ int rate(char const* input) {
 	TGraphAsymmErrors ZDCRate(&hlumi_itrig[it], &hlumi);    
     	lumiCanvas.cd();
 
+	ZDCRate.Scale(11245.6*880);
 	ZDCRate.GetXaxis()->SetTitle("Lumi");
     	ZDCRate.GetXaxis()->CenterTitle(true);
     	ZDCRate.GetYaxis()->SetTitle("rate");
