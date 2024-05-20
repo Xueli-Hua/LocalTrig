@@ -141,6 +141,10 @@ int checkTrigFire(char const* input) {
     TH1D hZDCM22_emu("hZDCM22_emu", "ZDC Minus 22", 1024, -0.5, 1023.5);
     TH1D hZDCP22_unpacker("hZDCP22_unpacker", "ZDC Plus 22", 1024, -0.5, 1023.5);
     TH1D hZDCM22_unpacker("hZDCM22_unpacker", "ZDC Minus 22", 1024, -0.5, 1023.5);
+    TH1D hZDCP22_emu_trig("hZDCP22_emu_trig", "ZDC Plus 22", 1024, -0.5, 1023.5);
+    TH1D hZDCM22_emu_trig("hZDCM22_emu_trig", "ZDC Minus 22", 1024, -0.5, 1023.5);
+    TH1D hZDCP22_unpacker_trig("hZDCP22_unpacker_trig", "ZDC Plus 22", 1024, -0.5, 1023.5);
+    TH1D hZDCM22_unpacker_trig("hZDCM22_unpacker_trig", "ZDC Minus 22", 1024, -0.5, 1023.5);
 
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
@@ -149,15 +153,19 @@ int checkTrigFire(char const* input) {
         if (i % 200000 == 0) { 
             cout << "Entry: " << i << " / " <<  totalEvents << endl; 
         }
+	hZDCP22_emu->Fill((*emuSum)[4]*2);
+	hZDCM22_emu.Fill((*emuSum)[5]*2);
+	hZDCP22_unpacker.Fill((*unpackerSum)[5]*2);
+	hZDCM22_unpacker.Fill((*unpackerSum)[4]*2);
 
         l1uGTZDCP22_emu = m_algoDecisionInitial_Emu.At(SeedBit["L1_ZDCP22"]);
         l1uGTZDCM22_emu = m_algoDecisionInitial_Emu.At(SeedBit["L1_ZDCM22"]);
         l1uGTZDCP22_unpacker = m_algoDecisionInitial_unpacker.At(SeedBit["L1_ZDCP22"]);
         l1uGTZDCM22_unpacker = m_algoDecisionInitial_unpacker.At(SeedBit["L1_ZDCM22"]);
-        if (l1uGTZDCP22_emu) hZDCP22_emu.Fill((*emuSum)[4]*2);
-        if (l1uGTZDCM22_emu) hZDCM22_emu.Fill((*emuSum)[5]*2);
-	if (l1uGTZDCP22_unpacker) hZDCP22_unpacker.Fill((*unpackerSum)[4]*2);
-        if (l1uGTZDCM22_unpacker) hZDCM22_unpacker.Fill((*unpackerSum)[5]*2);
+        if (l1uGTZDCP22_emu) hZDCP22_emu_trig.Fill((*emuSum)[4]*2);
+        if (l1uGTZDCM22_emu) hZDCM22_emu_trig.Fill((*emuSum)[5]*2);
+	if (l1uGTZDCP22_unpacker) hZDCP22_unpacker_trig.Fill((*unpackerSum)[5]*2);
+        if (l1uGTZDCM22_unpacker) hZDCM22_unpacker_trig.Fill((*unpackerSum)[4]*2);
 
 
     }
@@ -166,8 +174,12 @@ int checkTrigFire(char const* input) {
     TFile* fout = new TFile("results/checkTrigFire.root", "recreate");
     hZDCP22_emu.Write(); 
     hZDCM22_emu.Write(); 
+    hZDCP22_emu_trig.Write(); 
+    hZDCM22_emu_trig.Write();
     hZDCP22_unpacker.Write(); 
     hZDCM22_unpacker.Write(); 
+    hZDCP22_unpacker_trig.Write(); 
+    hZDCM22_unpacker_trig.Write(); 
     fout->Close();
    
     return 0;
