@@ -246,23 +246,24 @@ int rate(char const* input) {
     // plot the rates vs lumi 
     TCanvas lumiCanvas("lumiCanvas", "", 0, 0, 500, 500);
     TLegend lumiLegend(0.13, 0.12 ,0.88, 0.2);
+    TGraphAsymmErrors ZDCRate[16];
     for (int it=0;it<16;it++) {
-	TGraphAsymmErrors ZDCRate(&hlumi_itrig[it], &hlumi);    
+	ZDCRate[it].Divide(&hlumi_itrig[it], &hlumi);    
     	lumiCanvas.cd();
 
-	ZDCRate.Scale(11245.6*880);
-	ZDCRate.GetXaxis()->SetTitle("Lumi");
-    	ZDCRate.GetXaxis()->CenterTitle(true);
-    	ZDCRate.GetYaxis()->SetTitle("rate");
-    	ZDCRate.GetYaxis()->CenterTitle(true);
-    	//ZDCRate.GetXaxis()->SetLimits(0,11);
-    	ZDCRate.SetMinimum(0);
+	ZDCRate[it].Scale(11245.6*880);
+	ZDCRate[it].GetXaxis()->SetTitle("Lumi");
+    	ZDCRate[it].GetXaxis()->CenterTitle(true);
+    	ZDCRate[it].GetYaxis()->SetTitle("rate");
+    	ZDCRate[it].GetYaxis()->CenterTitle(true);
+    	//ZDCRate[it].GetXaxis()->SetLimits(0,11);
+    	ZDCRate[it].SetMinimum(0);
 
-    	ZDCRate.SetMarkerColor(46);
-    	ZDCRate.SetLineColor(46);
-    	ZDCRate.SetMarkerSize(0.5);
-    	ZDCRate.SetMarkerStyle(20);
-    	ZDCRate.Draw("AP");
+    	ZDCRate[it].SetMarkerColor(46);
+    	ZDCRate[it].SetLineColor(46);
+    	ZDCRate[it].SetMarkerSize(0.5);
+    	ZDCRate[it].SetMarkerStyle(20);
+    	ZDCRate[it].Draw("AP");
 
     	lumiLegend.Clear();
     	lumiLegend.SetBorderSize(0);
@@ -270,7 +271,7 @@ int rate(char const* input) {
     	lumiLegend.SetTextSize(0.03);
     	lumiLegend.SetHeader(seeds[it].c_str());
     	lumiLegend.Draw();
-	lumiCanvas.SaveAs("results/ZDCrate.pdf");
+	lumiCanvas.SaveAs(("results/Rate_"+seeds[it]).c_str().pdf");
     }
 
     // save histograms to file so I can look at them 
