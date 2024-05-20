@@ -123,6 +123,8 @@ int checkTrigFire(char const* input) {
     bool l1uGTZDCM22_emu;
     bool l1uGTZDCP22_unpacker;
     bool l1uGTZDCM22_unpacker;
+    bool l1uGTJet28_emu;
+    bool l1uGTJet28_unpacker;
 
     // read in emulated information
     TChain emuChain("l1UpgradeEmuTree/L1UpgradeTree");
@@ -194,9 +196,6 @@ int checkTrigFire(char const* input) {
 	if (l1uGTJet28_emu) hJet28_emu_trig.Fill(emuMaxJetPt);
 	if (l1uGTJet28_unpacker) hJet28_unpacker_trig.Fill(emuMaxJetPt);
 	//==============================================================================
-
-    }
-
 
     }
 
