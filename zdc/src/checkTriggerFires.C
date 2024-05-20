@@ -153,7 +153,7 @@ int checkTrigFire(char const* input) {
         if (i % 200000 == 0) { 
             cout << "Entry: " << i << " / " <<  totalEvents << endl; 
         }
-	hZDCP22_emu->Fill((*emuSum)[4]*2);
+	hZDCP22_emu.Fill((*emuSum)[4]*2);
 	hZDCM22_emu.Fill((*emuSum)[5]*2);
 	hZDCP22_unpacker.Fill((*unpackerSum)[5]*2);
 	hZDCM22_unpacker.Fill((*unpackerSum)[4]*2);

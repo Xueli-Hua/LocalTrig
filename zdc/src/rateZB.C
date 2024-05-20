@@ -169,8 +169,8 @@ int rate(char const* input) {
     TH2F hTrigvsSumPlus_unpacker("hTrigvsSumPlus_unpacker","hTrigvsSumPlus_unpacker",16,0,16,5000, 0, 500);
     TH2F hTrigvsSumMinus_Emu("hTrigvsSumMinus_Emu","hTrigvsSumMinus_Emu",16,0,16,5000, 0, 500);
     TH2F hTrigvsSumPlus_Emu("hTrigvsSumPlus_Emu","hTrigvsSumPlus_Emu",16,0,16,5000, 0, 500);
-    TH1F hlumi[16];
-    TH1F hlumi_itrig[16];
+    TH1D hlumi[16];
+    TH1D hlumi_itrig[16];
 	 
     Double_t zdcnum=0;
     Double_t zbnum=0;
@@ -246,6 +246,8 @@ int rate(char const* input) {
     hTrigvsSumMinus_Emu.Write();
     hTrigvsSumPlus_Emu.Write();
     for (int it=0;it<16;it++) {
+	hlumi[it].SetName(("hlumi_"+to_string(it)).c_str());
+	hlumi_itrig[it].SetName(("hlumi_itrig"+to_string(it)).c_str());
 	hlumi[it].Write();
 	hlumi_itrig[it].Write();
     }
