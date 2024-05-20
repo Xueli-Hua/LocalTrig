@@ -243,6 +243,35 @@ int rate(char const* input) {
 	cout << "Nb of Branches: " << BrNb_.at(1) << ", " << seeds[i].c_str() << " rate: " << num[i] << "/" << totalEvents << "*11245.6*" << BrNb_.at(1) << " = " << num[i]/totalEvents*11245.6*BrNb_.at(1) << endl;
     }
 
+    // plot the rates vs lumi 
+    TCanvas lumiCanvas("lumiCanvas", "", 0, 0, 500, 500);
+    TLegend lumiLegend(0.13, 0.12 ,0.88, 0.2);
+    for (int it=0;it<16;it++) {
+	TGraphAsymmErrors ZDCRate(&hlumi_itrig[it], &hlumi);    
+    	lumiCanvas.cd();
+
+	ZDCRate.GetXaxis()->SetTitle("Lumi");
+    	ZDCRate.GetXaxis()->CenterTitle(true);
+    	ZDCRate.GetYaxis()->SetTitle("rate");
+    	ZDCRate.GetYaxis()->CenterTitle(true);
+    	//ZDCRate.GetXaxis()->SetLimits(0,11);
+    	ZDCRate.SetMinimum(0);
+
+    	ZDCRate.SetMarkerColor(46);
+    	ZDCRate.SetLineColor(46);
+    	ZDCRate.SetMarkerSize(0.5);
+    	ZDCRate.SetMarkerStyle(20);
+    	ZDCRate.Draw("AP");
+
+    	lumiLegend.Clear();
+    	lumiLegend.SetBorderSize(0);
+   	lumiLegend.SetFillStyle(0);
+    	lumiLegend.SetTextSize(0.03);
+    	lumiLegend.SetHeader(seeds[it].c_str());
+    	lumiLegend.Draw();
+	lumiCanvas.SaveAs("results/ZDCrate.pdf");
+    }
+
     // save histograms to file so I can look at them 
     TFile* fout = new TFile("results/runNb.root", "recreate");
     runNbHist.Write(); 
