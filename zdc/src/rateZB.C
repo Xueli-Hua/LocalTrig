@@ -169,15 +169,20 @@ int rate(char const* input) {
     TH2F hTrigvsSumPlus_unpacker("hTrigvsSumPlus_unpacker","hTrigvsSumPlus_unpacker",16,0,16,5000, 0, 500);
     TH2F hTrigvsSumMinus_Emu("hTrigvsSumMinus_Emu","hTrigvsSumMinus_Emu",16,0,16,5000, 0, 500);
     TH2F hTrigvsSumPlus_Emu("hTrigvsSumPlus_Emu","hTrigvsSumPlus_Emu",16,0,16,5000, 0, 500);
-    TH1D hlumi;
+    TH1D hlumi("lumiNb","lumiNb",1000,0,1000);
     TH1D hlumi_itrig[16];
+    for (int i=0;i<16;i++) {
+    	hlumi_itrig[i].SetName("lumiNb");
+	hlumi_itrig[i].SetTitle("lumiNb");
+	hlumi_itrig[i].SetBins(1000,0,1000);
+    }
 	 
     Double_t zdcnum=0;
     Double_t zbnum=0;
     Double_t sgmonum=0;
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
-    for (Long64_t i = 0; i < 1000000; i++) {
+    for (Long64_t i = 0; i < 10000; i++) {
         l1uGTReader.Next();l1uGTEmuReader.Next();unpackerReader.Next();emuReader.Next();l1EvtReader.Next();
         if (i % 200000 == 0) { 
             cout << "Entry: " << i << " / " <<  totalEvents << endl; 
@@ -198,7 +203,7 @@ int rate(char const* input) {
 	    l1uGTEmudecisions[it]=m_algoDecisionInitial_Emu.At(SeedBit[seeds[it].c_str()]);
 	    l1uGTdecisions[it]=m_algoDecisionInitial_unpacker.At(SeedBit[seeds[it].c_str()]);
 	    if (l1uGTEmudecisions[it]) {
-		num[i]++;
+		num[it]++;
 		hlumi_itrig[it].Fill(*lumi);
 	    }
 	}
