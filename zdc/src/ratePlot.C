@@ -75,7 +75,7 @@ int ratePlot()
 
 int main(int argc, char* argv[]) {
     if (argc == 1)
-        return rate();
+        return ratePlot();
     else {
         cout << "ERROR" << endl;
         return -1;
