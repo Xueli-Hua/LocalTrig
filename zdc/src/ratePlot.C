@@ -26,7 +26,7 @@
 
 using namespace std;
 
-void ratePlot()
+int ratePlot()
 {
 
     vector<string> seeds={"L1_ZeroBias_copy","L1_ZDC1n_Bkp1_OR","L1_SingleJet8_ZDC1n_AsymXOR","L1_SingleJet12_ZDC1n_AsymXOR","L1_SingleJet16_ZDC1n_AsymXOR","L1_SingleJet20_ZDC1n_AsymXOR","L1_SingleJet24_ZDC1n_AsymXOR","L1_SingleJet28_ZDC1n_AsymXOR","L1_SingleJet8_ZDC1n_OR","L1_SingleJet12_ZDC1n_OR","L1_SingleJet16_ZDC1n_OR","L1_SingleJet20_ZDC1n_OR","L1_SingleJet24_ZDC1n_OR","L1_SingleJet28_ZDC1n_OR","L1_ZDC1n_AsymXOR","L1_ZDC1n_OR"};
@@ -69,5 +69,15 @@ void ratePlot()
     	lumiLegend.SetHeader(seeds[it].c_str());
     	lumiLegend.Draw();
 		lumiCanvas.SaveAs(("zdcTrigPlots/Rate_v0_"+seeds[it]+".png").c_str());
+    }
+    return 0;
+}
+
+int main(int argc, char* argv[]) {
+    if (argc == 1)
+        return rate();
+    else {
+        cout << "ERROR" << endl;
+        return -1;
     }
 }
