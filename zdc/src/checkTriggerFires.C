@@ -151,10 +151,10 @@ int checkTrigFire(char const* input) {
     TH1D hZDCP22_unpacker_trig("hZDCP22_unpacker_trig", "ZDC Plus 22", 1024, -0.5, 1023.5);
     TH1D hZDCM22_unpacker_trig("hZDCM22_unpacker_trig", "ZDC Minus 22", 1024, -0.5, 1023.5);
 
-    TH1D hJet28_emu("hJet28_emu", "Single Jet 28", 1024, -0.5, 1023.5);
-    TH1D hJet28_emu_trig("hJet28_emu_trig", "Single Jet 28", 1024, -0.5, 1023.5);
-    TH1D hJet28_unpacker("hJet28_unpacker", "Single Jet 28", 1024, -0.5, 1023.5);
-    TH1D hJet28_unpacker_trig("hJet28_unpacker_trig", "Single Jet 28", 1024, -0.5, 1023.5);
+    TH1D hJet28_emu("hJet28_emu", "Single Jet 28", 400, 0, 200);
+    TH1D hJet28_emu_trig("hJet28_emu_trig", "Single Jet 28",  400, 0, 200);
+    TH1D hJet28_unpacker("hJet28_unpacker", "Single Jet 28",  400, 0, 200);
+    TH1D hJet28_unpacker_trig("hJet28_unpacker_trig", "Single Jet 28",  400, 0, 200);
 
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
@@ -200,7 +200,7 @@ int checkTrigFire(char const* input) {
     }
 
     // save histograms to file so I can look at them 
-    TFile* fout = new TFile("results/checkTrigFire_ZBv2.root", "recreate");
+    TFile* fout = new TFile("results/checkTrigFire_v2.root", "recreate");
     hZDCP22_emu.Write(); 
     hZDCM22_emu.Write(); 
     hZDCP22_emu_trig.Write(); 
