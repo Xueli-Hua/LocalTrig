@@ -123,7 +123,7 @@ int rate(char const* input) {
     for (auto const & name: names) trignames << name.c_str() << endl;
     trignames.close();*/
     
-    string seedzdc = "L1_ZDC1n_Bkp1_OR"; 
+    string seedzdc = "L1_SingleJet8_ZDC1n_AsymXOR"; 
     string seedzb = "L1_ZeroBias_copy";
     string seedsgmo = "L1_SingleMuOpen";
     if (SeedBit.find(seedzdc.c_str()) == SeedBit.end()) return false;
@@ -233,7 +233,7 @@ int rate(char const* input) {
         }
 
     }
-    cout << "L1_ZDC1n_Bkp1_OR rate: " << zdcnum << "/" << totalEvents << " = " << zdcnum/totalEvents << endl;
+    cout << "L1_SingleJet8_ZDC1n_AsymXOR rate: " << zdcnum << "/" << totalEvents << " = " << zdcnum/totalEvents << endl;
     cout << "L1_ZeroBias_copy rate: " << zbnum << "/" << totalEvents << " = " << zbnum/totalEvents << endl;
     cout << "L1_SingleMuOpen rate: " << sgmonum << "/" << totalEvents << " = " << sgmonum/totalEvents << endl;
 
