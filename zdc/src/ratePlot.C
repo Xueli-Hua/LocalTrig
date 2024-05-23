@@ -26,12 +26,14 @@
 
 using namespace std;
 
-int ratePlot()
+int ratePlot(char const* input)
 {
 
     vector<string> seeds={"L1_ZeroBias_copy","L1_ZDC1n_Bkp1_OR","L1_SingleJet8_ZDC1n_AsymXOR","L1_SingleJet12_ZDC1n_AsymXOR","L1_SingleJet16_ZDC1n_AsymXOR","L1_SingleJet20_ZDC1n_AsymXOR","L1_SingleJet24_ZDC1n_AsymXOR","L1_SingleJet28_ZDC1n_AsymXOR","L1_SingleJet8_ZDC1n_OR","L1_SingleJet12_ZDC1n_OR","L1_SingleJet16_ZDC1n_OR","L1_SingleJet20_ZDC1n_OR","L1_SingleJet24_ZDC1n_OR","L1_SingleJet28_ZDC1n_OR","L1_ZDC1n_AsymXOR","L1_ZDC1n_OR"};
     
-    TFile *f = TFile::Open("rootfiles/runNb.root");
+    //TFile *f = TFile::Open("rootfiles/runNb.root");
+    string s=input;
+    TFile *f = TFile::Open(s.c_str());
     
     TH1F *hlumi_itrig[16];
     TH1F *hlumi = (TH1F *)f->Get("hlumi");
@@ -74,8 +76,8 @@ int ratePlot()
 }
 
 int main(int argc, char* argv[]) {
-    if (argc == 1)
-        return ratePlot();
+    if (argc == 2)
+        return ratePlot(argv[1]);
     else {
         cout << "ERROR" << endl;
         return -1;

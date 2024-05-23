@@ -225,7 +225,7 @@ int checkUnpacker(
           sumPlusEmuBx->Fill(globalBxEmu, emSum);
           sumPlusCorr->Fill(emSum, unpackedSumToComparePlus);
 
-	  if(emSum != unpackedSumToComparePlus && unpackedSumToComparePlus!=1023){
+	  if(emSum != unpackedSumToComparePlus){// && unpackedSumToComparePlus!=1023){
             std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
             std::cout << "[Error]: Unpacked sums and emulated sums do not match" << std::endl;
             std::cout << "Emulated Sum Plus: " << emSum << " Emu Bx: " << emBx <<  " Unpacked Sum Plus: " << unpackedSumToComparePlus << std::endl;
