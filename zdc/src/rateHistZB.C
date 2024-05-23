@@ -195,7 +195,7 @@ int rate(char const* input) {
 	hlumi.Fill(*lumi);
 	
 	//if (std::find(runRange1088.begin(), runRange1088.end(), *runNb) == runRange1088.end()) continue;
-	if (*runNb!=375746&&*runNb!=375754) continue;
+	if (*runNb!=375754) continue;
 	NEvts++;
 
         if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial_Emu.GetSize()) continue;  
