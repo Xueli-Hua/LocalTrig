@@ -131,7 +131,7 @@ int rate(char const* input) {
     bool l1uGTdecision2;
     bool l1uGTdecision3;
 
-    vector<string> seeds={"L1_ZeroBias_copy","L1_SingleMu5","L1_SingleMu3","L1_SingleJet8_BptxAND","L1_SingleEG5","L1_SingleEG15","L1_SingleMuOpen_SingleEG15","L1_ZDC1n_Bkp1_OR","L1_SingleJet8_ZDC1n_AsymXOR","L1_SingleJet12_ZDC1n_AsymXOR","L1_SingleJet16_ZDC1n_AsymXOR","L1_SingleJet20_ZDC1n_AsymXOR","L1_SingleJet24_ZDC1n_AsymXOR","L1_SingleJet28_ZDC1n_AsymXOR","L1_SingleJet8_ZDC1n_OR","L1_SingleJet12_ZDC1n_OR","L1_SingleJet16_ZDC1n_OR","L1_SingleJet20_ZDC1n_OR","L1_SingleJet24_ZDC1n_OR","L1_SingleJet28_ZDC1n_OR","L1_ZDC1n_AsymXOR","L1_ZDC1n_OR"};
+    vector<string> seeds={"L1_ZeroBias_copy","L1_SingleMu5","L1_SingleMu3","L1_SingleJet8_BptxAND","L1_SingleJet16","L1_SingleJet28","L1_SingleEG5","L1_SingleEG15","L1_SingleMuOpen_SingleEG15","L1_ZDC1n_Bkp1_OR","L1_SingleJet8_ZDC1n_AsymXOR","L1_SingleJet12_ZDC1n_AsymXOR","L1_SingleJet16_ZDC1n_AsymXOR","L1_SingleJet20_ZDC1n_AsymXOR","L1_SingleJet24_ZDC1n_AsymXOR","L1_SingleJet28_ZDC1n_AsymXOR","L1_SingleJet8_ZDC1n_OR","L1_SingleJet12_ZDC1n_OR","L1_SingleJet16_ZDC1n_OR","L1_SingleJet20_ZDC1n_OR","L1_SingleJet24_ZDC1n_OR","L1_SingleJet28_ZDC1n_OR","L1_ZDC1n_AsymXOR","L1_ZDC1n_OR"};
     bool l1uGTEmudecisions[22];
     bool l1uGTdecisions[22];
     Double_t num[22];
@@ -195,7 +195,7 @@ int rate(char const* input) {
 	hlumi.Fill(*lumi);
 	
 	//if (std::find(runRange1088.begin(), runRange1088.end(), *runNb) == runRange1088.end()) continue;
-	if (*runNb!=375058) continue;
+	if (*runNb!=375746&&*runNb!=375754) continue;
 	NEvts++;
 
         if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial_Emu.GetSize()) continue;  
@@ -244,10 +244,10 @@ int rate(char const* input) {
     cout << "L1_ZeroBias_copy rate: " << zbnum << "/" << NEvts << " = " << zbnum/NEvts << endl;
     cout << "L1_SingleMuOpen rate: " << sgmonum << "/" << NEvts << " = " << sgmonum/NEvts << endl;
 
-    const std::map<uint, int> BrNb_ = {    {0, 1088},    {1, 880},    {2, 960},    {3, 394},    {4, 204}    };
+    const std::map<uint, int> BrNb_ = {    {0, 1088},    {1, 880},    {2, 960},    {3, 394},    {4, 204},	{5,875} };
 
     for (int i=0;i<22;i++) {
-	cout << "Nb of Branches: " << BrNb_.at(0) << ", " << seeds[i].c_str() << " rate: " << num[i] << "/" << NEvts << "*11245.6*" << BrNb_.at(0) << " = " << num[i]/NEvts*11245.6*BrNb_.at(0) << endl;
+	cout << "Nb of Branches: " << BrNb_.at(5) << ", " << seeds[i].c_str() << " rate: " << num[i] << "/" << NEvts << "*11245.6*" << BrNb_.at(5) << " = " << num[i]/NEvts*11245.6*BrNb_.at(5) << endl;
     }
 
     // plot the rates vs lumi 
