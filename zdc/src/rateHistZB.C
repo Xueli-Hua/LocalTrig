@@ -78,7 +78,7 @@ void FillChain(TChain& chain, vector<string>& files) {
     }
 }
 //
-int rate(char const* input) {
+int rate(char const* input, char const* output) {
     // read in all files in the input folder 
     vector<string> files;
     GetFiles(input, files);
@@ -131,13 +131,15 @@ int rate(char const* input) {
     bool l1uGTdecision2;
     bool l1uGTdecision3;
 
-    vector<string> HIseeds={"L1_ZeroBias","L1_SingleMu5","L1_SingleMu5_BptxAND","L1_SingleMu3","L1_SingleMu3_BptxAND","L1_SingleEG3","L1_SingleEG5","L1_SingleJet8_BptxAND","L1_SingleJet16_BptxAND","L1_SingleJet28_BptxAND","L1_SingleMuOpen","L1_SingleEG15_BptxAND","L1_SingleMuOpen_SingleEG15_BptxAND","L1_ZDC1n_OR_BptxAND","L1_SingleJet8_ZDC1n_AsymXOR_BptxAND","L1_SingleJet12_ZDC1n_AsymXOR_BptxAND","L1_SingleJet16_ZDC1n_AsymXOR_BptxAND","L1_SingleJet20_ZDC1n_AsymXOR_BptxAND","L1_SingleJet24_ZDC1n_AsymXOR_BptxAND","L1_SingleJet28_ZDC1n_AsymXOR_BptxAND"};
-
     vector<string> seeds={"L1_ZeroBias_copy","L1_SingleMu5","L1_SingleMu3","L1_SingleJet8_BptxAND","L1_SingleJet16","L1_SingleJet28","L1_SingleEG5","L1_SingleEG15","L1_SingleMuOpen_SingleEG15","L1_ZDC1n_Bkp1_OR","L1_SingleJet8_ZDC1n_AsymXOR","L1_SingleJet12_ZDC1n_AsymXOR","L1_SingleJet16_ZDC1n_AsymXOR","L1_SingleJet20_ZDC1n_AsymXOR","L1_SingleJet24_ZDC1n_AsymXOR","L1_SingleJet28_ZDC1n_AsymXOR","L1_SingleJet8_ZDC1n_OR","L1_SingleJet12_ZDC1n_OR","L1_SingleJet16_ZDC1n_OR","L1_SingleJet20_ZDC1n_OR","L1_SingleJet24_ZDC1n_OR","L1_SingleJet28_ZDC1n_OR","L1_ZDC1n_AsymXOR","L1_ZDC1n_OR"};
     bool l1uGTEmudecisions[24];
     bool l1uGTdecisions[24];
     Double_t num[24];
-    vector<UInt_t> runRange = {375245,375252,375256,375259,375300,375317,375413,375441,375448,375455,375463,375658,375665,375697,375703};
+
+    Int_t Nseeds = names.size();
+    bool l1uGTEmu[Nseeds];
+    bool l1uGT[Nseeds];
+    Double_t npass[Nseeds];
     
     // read in emulated information
     TChain emuChain("l1UpgradeEmuTree/L1UpgradeTree");
@@ -162,15 +164,8 @@ int rate(char const* input) {
     TTreeReaderValue<UInt_t> runNb(l1EvtReader, "run");
     TTreeReaderValue<UInt_t> lumi(l1EvtReader, "lumi");
 	 
-    // create histograms for efficiency plots 
-    //int nbins = 200;
-    //float min = 0;
-    //float max = 2000;
+    // create histograms
     TH1F runNbHist("runNb","runNb",900,374900,375800);
-    TH2F hTrigvsSumMinus_unpacker("hTrigvsSumMinus_unpacker","hTrigvsSumMinus_unpacker",16,0,16,5000, 0, 500);
-    TH2F hTrigvsSumPlus_unpacker("hTrigvsSumPlus_unpacker","hTrigvsSumPlus_unpacker",16,0,16,5000, 0, 500);
-    TH2F hTrigvsSumMinus_Emu("hTrigvsSumMinus_Emu","hTrigvsSumMinus_Emu",16,0,16,5000, 0, 500);
-    TH2F hTrigvsSumPlus_Emu("hTrigvsSumPlus_Emu","hTrigvsSumPlus_Emu",16,0,16,5000, 0, 500);
     TH1F hlumi("lumiNb","lumiNb",1000,0,1000);
     TH1F hlumi_itrig[24];
     for (int i=0;i<24;i++) {
@@ -216,30 +211,12 @@ int rate(char const* input) {
 		hlumi_itrig[it].Fill(*lumi);
 	    }
 	}
-	
-	for (size_t j=0; j<(*unpackerSum).size(); j++){
-	    int unpackedBx   = (*unpackerBx)[j];
-      	    int unpackedType = (*unpackerType)[j];
-            int unpackedSum  = (*unpackerSum)[j]*2;
-	    if(unpackedBx == -2) continue; 
-	    for (int it=0;it<24;it++) {
-	        if (l1uGTdecisions[it]) {
-			if (unpackedType == 28) hTrigvsSumMinus_unpacker.Fill(it,unpackedSum);
-			else if (unpackedType == 27) hTrigvsSumPlus_unpacker.Fill(it,unpackedSum);
-		}
-	    }
+
+	for (int is=0;is<names.size();is++) {
+	    l1uGTEmu[is]=m_algoDecisionInitial_Emu.At(SeedBit[names[is].c_str()]);
+	    l1uGT[is]=m_algoDecisionInitial_unpacker.At(SeedBit[names[is].c_str()]);
+	    if (l1uGTEmu[it]) npass[is]++;
 	}
-	for (size_t j = 0; j<(*emuSum).size(); j++){
-      	    //int emBx       = (*emuBx)[j];
-            int emType     = (*emuType)[j];
-            int emSum      = ((*emuSum)[j])*2;
-	    for (int it=0;it<24;it++) {
-	        if (l1uGTEmudecisions[it]) {
-			if (emType == 28) hTrigvsSumMinus_Emu.Fill(it,emSum);
-			else if (emType == 27) hTrigvsSumPlus_Emu.Fill(it,emSum);
-		}
-	    }
-        }
 
     }
     cout << "L1_SingleJet8_ZDC1n_AsymXOR rate: " << zdcnum << "/" << NEvts << " = " << zdcnum/NEvts << endl;
@@ -248,48 +225,22 @@ int rate(char const* input) {
 
     const std::map<uint, int> BrNb_ = {    {0, 1088},    {1, 880},    {2, 960},    {3, 394},    {4, 204},	{5,875} };
 
+    ofstream Parttrig;
+    Parttrig.open("results/Parttrig_"+string(output)+".txt");
     for (int i=0;i<24;i++) {
-	cout << "Nb of Branches: " << BrNb_.at(1) << ", " << seeds[i].c_str() << " rate: " << num[i] << "/" << NEvts << "*11245.6*" << BrNb_.at(1) << " = " << num[i]/NEvts*11245.6*BrNb_.at(1) << endl;
+	Parttrig << "Nb of Branches: " << BrNb_.at(1) << ", " << seeds[i].c_str() << " rate: " << num[i] << "/" << NEvts << "*11245.6*" << BrNb_.at(1) << " = " << num[i]/NEvts*11245.6*BrNb_.at(1) << endl;
     }
 
-    // plot the rates vs lumi 
-    /*TCanvas lumiCanvas("lumiCanvas", "", 0, 0, 800, 600);
-    TLegend lumiLegend(0.13, 0.12 ,0.88, 0.2);
-    TGraphAsymmErrors ZDCRate[16];
-    for (int it=0;it<16;it++) {
-	ZDCRate[it].Divide(&hlumi_itrig[it], &hlumi);    
-    	lumiCanvas.cd();
-
-	ZDCRate[it].Scale(11245.6*880);
-	ZDCRate[it].GetXaxis()->SetTitle("Lumi");
-    	ZDCRate[it].GetXaxis()->CenterTitle(true);
-    	ZDCRate[it].GetYaxis()->SetTitle("rate");
-    	ZDCRate[it].GetYaxis()->CenterTitle(true);
-    	//ZDCRate[it].GetXaxis()->SetLimits(0,11);
-    	ZDCRate[it].SetMinimum(0);
-
-    	ZDCRate[it].SetMarkerColor(46);
-    	ZDCRate[it].SetLineColor(46);
-    	ZDCRate[it].SetMarkerSize(0.5);
-    	ZDCRate[it].SetMarkerStyle(20);
-    	ZDCRate[it].Draw("AP");
-
-    	lumiLegend.Clear();
-    	lumiLegend.SetBorderSize(0);
-   	lumiLegend.SetFillStyle(0);
-    	lumiLegend.SetTextSize(0.03);
-    	lumiLegend.SetHeader(seeds[it].c_str());
-    	lumiLegend.Draw();
-	lumiCanvas.SaveAs(("results/plots/Rate_"+seeds[it]+".png").c_str());
-    }*/
+    ofstream trigrates;
+    trigrates.open("results/trigRates_"+string(output)+".txt");
+    for (int j=0;j<names.size();j++){
+	trigrates << names[j].c_str() << setw(20) << npass[j]/NEvts*11245.6*BrNb_.at(1) << endl;
+    }
+    trigrates.close();
 
     // save histograms to file so I can look at them 
-    TFile* fout = new TFile("results/runNb_375703_v042_spike.root", "recreate");
+    TFile* fout = new TFile("results/runNb_"+string(output)+".root", "recreate");
     runNbHist.Write(); 
-    hTrigvsSumMinus_unpacker.Write();
-    hTrigvsSumPlus_unpacker.Write();
-    hTrigvsSumMinus_Emu.Write();
-    hTrigvsSumPlus_Emu.Write();
     hlumi.SetName("hlumi");
     hlumi.Write();
     for (int it=0;it<24;it++) {
@@ -302,8 +253,8 @@ int rate(char const* input) {
 }
 
 int main(int argc, char* argv[]) {
-    if (argc == 2)
-        return rate(argv[1]);
+    if (argc == 3)
+        return rate(argv[1],argv[2]);
     else {
         cout << "ERROR" << endl;
         return -1;
