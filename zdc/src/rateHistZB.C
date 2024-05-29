@@ -131,6 +131,8 @@ int rate(char const* input) {
     bool l1uGTdecision2;
     bool l1uGTdecision3;
 
+    vector<string> HIseeds={"L1_ZeroBias","L1_SingleMu5","L1_SingleMu5_BptxAND","L1_SingleMu3","L1_SingleMu3_BptxAND","L1_SingleEG3","L1_SingleEG5","L1_SingleJet8_BptxAND","L1_SingleJet16_BptxAND","L1_SingleJet28_BptxAND","L1_SingleMuOpen","L1_SingleEG15_BptxAND","L1_SingleMuOpen_SingleEG15_BptxAND","L1_ZDC1n_OR_BptxAND","L1_SingleJet8_ZDC1n_AsymXOR_BptxAND","L1_SingleJet12_ZDC1n_AsymXOR_BptxAND","L1_SingleJet16_ZDC1n_AsymXOR_BptxAND","L1_SingleJet20_ZDC1n_AsymXOR_BptxAND","L1_SingleJet24_ZDC1n_AsymXOR_BptxAND","L1_SingleJet28_ZDC1n_AsymXOR_BptxAND"};
+
     vector<string> seeds={"L1_ZeroBias_copy","L1_SingleMu5","L1_SingleMu3","L1_SingleJet8_BptxAND","L1_SingleJet16","L1_SingleJet28","L1_SingleEG5","L1_SingleEG15","L1_SingleMuOpen_SingleEG15","L1_ZDC1n_Bkp1_OR","L1_SingleJet8_ZDC1n_AsymXOR","L1_SingleJet12_ZDC1n_AsymXOR","L1_SingleJet16_ZDC1n_AsymXOR","L1_SingleJet20_ZDC1n_AsymXOR","L1_SingleJet24_ZDC1n_AsymXOR","L1_SingleJet28_ZDC1n_AsymXOR","L1_SingleJet8_ZDC1n_OR","L1_SingleJet12_ZDC1n_OR","L1_SingleJet16_ZDC1n_OR","L1_SingleJet20_ZDC1n_OR","L1_SingleJet24_ZDC1n_OR","L1_SingleJet28_ZDC1n_OR","L1_ZDC1n_AsymXOR","L1_ZDC1n_OR"};
     bool l1uGTEmudecisions[24];
     bool l1uGTdecisions[24];
