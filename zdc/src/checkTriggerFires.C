@@ -191,8 +191,8 @@ int checkTrigFire(char const* input) {
 	hJet28_emu.Fill(emuMaxJetPt);
 	hJet28_unpacker.Fill(emuMaxJetPt);
 
-	l1uGTJet28_emu = m_algoDecisionInitial_Emu.At(SeedBit["L1_SingleJet28"]);
-	l1uGTJet28_unpacker = m_algoDecisionInitial_unpacker.At(SeedBit["L1_SingleJet28"]);
+	l1uGTJet28_emu = m_algoDecisionInitial_Emu.At(SeedBit["L1_SingleJet28_BptxAND"]);
+	l1uGTJet28_unpacker = m_algoDecisionInitial_unpacker.At(SeedBit["L1_SingleJet28_BptxAND"]);
 	if (l1uGTJet28_emu) hJet28_emu_trig.Fill(emuMaxJetPt);
 	if (l1uGTJet28_unpacker) hJet28_unpacker_trig.Fill(emuMaxJetPt);
 	//==============================================================================
@@ -200,7 +200,7 @@ int checkTrigFire(char const* input) {
     }
 
     // save histograms to file so I can look at them 
-    TFile* fout = new TFile("results/checkTrigFire_v2.root", "recreate");
+    TFile* fout = new TFile("results/checkTrigFire_spike.root", "recreate");
     hZDCP22_emu.Write(); 
     hZDCM22_emu.Write(); 
     hZDCP22_emu_trig.Write(); 

@@ -132,9 +132,9 @@ int rate(char const* input) {
     bool l1uGTdecision3;
 
     vector<string> seeds={"L1_ZeroBias_copy","L1_SingleMu5","L1_SingleMu3","L1_SingleJet8_BptxAND","L1_SingleJet16","L1_SingleJet28","L1_SingleEG5","L1_SingleEG15","L1_SingleMuOpen_SingleEG15","L1_ZDC1n_Bkp1_OR","L1_SingleJet8_ZDC1n_AsymXOR","L1_SingleJet12_ZDC1n_AsymXOR","L1_SingleJet16_ZDC1n_AsymXOR","L1_SingleJet20_ZDC1n_AsymXOR","L1_SingleJet24_ZDC1n_AsymXOR","L1_SingleJet28_ZDC1n_AsymXOR","L1_SingleJet8_ZDC1n_OR","L1_SingleJet12_ZDC1n_OR","L1_SingleJet16_ZDC1n_OR","L1_SingleJet20_ZDC1n_OR","L1_SingleJet24_ZDC1n_OR","L1_SingleJet28_ZDC1n_OR","L1_ZDC1n_AsymXOR","L1_ZDC1n_OR"};
-    bool l1uGTEmudecisions[22];
-    bool l1uGTdecisions[22];
-    Double_t num[22];
+    bool l1uGTEmudecisions[24];
+    bool l1uGTdecisions[24];
+    Double_t num[24];
     vector<UInt_t> runRange = {375245,375252,375256,375259,375300,375317,375413,375441,375448,375455,375463,375658,375665,375697,375703};
     
     // read in emulated information
@@ -170,8 +170,8 @@ int rate(char const* input) {
     TH2F hTrigvsSumMinus_Emu("hTrigvsSumMinus_Emu","hTrigvsSumMinus_Emu",16,0,16,5000, 0, 500);
     TH2F hTrigvsSumPlus_Emu("hTrigvsSumPlus_Emu","hTrigvsSumPlus_Emu",16,0,16,5000, 0, 500);
     TH1F hlumi("lumiNb","lumiNb",1000,0,1000);
-    TH1F hlumi_itrig[22];
-    for (int i=0;i<22;i++) {
+    TH1F hlumi_itrig[24];
+    for (int i=0;i<24;i++) {
     	hlumi_itrig[i].SetName("lumiNb");
 	hlumi_itrig[i].SetTitle("lumiNb");
 	hlumi_itrig[i].SetBins(1000,0,1000);
@@ -195,7 +195,7 @@ int rate(char const* input) {
 	hlumi.Fill(*lumi);
 	
 	//if (std::find(runRange1088.begin(), runRange1088.end(), *runNb) == runRange1088.end()) continue;
-	if (*runNb!=375754) continue;
+	if (*runNb!=375703) continue;
 	NEvts++;
 
         if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial_Emu.GetSize()) continue;  
@@ -206,7 +206,7 @@ int rate(char const* input) {
         if (l1uGTdecision2) zbnum++;
         if (l1uGTdecision3) sgmonum++;
 	
-	for (int it=0;it<22;it++) {
+	for (int it=0;it<24;it++) {
 	    l1uGTEmudecisions[it]=m_algoDecisionInitial_Emu.At(SeedBit[seeds[it].c_str()]);
 	    l1uGTdecisions[it]=m_algoDecisionInitial_unpacker.At(SeedBit[seeds[it].c_str()]);
 	    if (l1uGTEmudecisions[it]) {
@@ -220,7 +220,7 @@ int rate(char const* input) {
       	    int unpackedType = (*unpackerType)[j];
             int unpackedSum  = (*unpackerSum)[j]*2;
 	    if(unpackedBx == -2) continue; 
-	    for (int it=0;it<22;it++) {
+	    for (int it=0;it<24;it++) {
 	        if (l1uGTdecisions[it]) {
 			if (unpackedType == 28) hTrigvsSumMinus_unpacker.Fill(it,unpackedSum);
 			else if (unpackedType == 27) hTrigvsSumPlus_unpacker.Fill(it,unpackedSum);
@@ -231,7 +231,7 @@ int rate(char const* input) {
       	    //int emBx       = (*emuBx)[j];
             int emType     = (*emuType)[j];
             int emSum      = ((*emuSum)[j])*2;
-	    for (int it=0;it<22;it++) {
+	    for (int it=0;it<24;it++) {
 	        if (l1uGTEmudecisions[it]) {
 			if (emType == 28) hTrigvsSumMinus_Emu.Fill(it,emSum);
 			else if (emType == 27) hTrigvsSumPlus_Emu.Fill(it,emSum);
@@ -246,8 +246,8 @@ int rate(char const* input) {
 
     const std::map<uint, int> BrNb_ = {    {0, 1088},    {1, 880},    {2, 960},    {3, 394},    {4, 204},	{5,875} };
 
-    for (int i=0;i<22;i++) {
-	cout << "Nb of Branches: " << BrNb_.at(5) << ", " << seeds[i].c_str() << " rate: " << num[i] << "/" << NEvts << "*11245.6*" << BrNb_.at(5) << " = " << num[i]/NEvts*11245.6*BrNb_.at(5) << endl;
+    for (int i=0;i<24;i++) {
+	cout << "Nb of Branches: " << BrNb_.at(1) << ", " << seeds[i].c_str() << " rate: " << num[i] << "/" << NEvts << "*11245.6*" << BrNb_.at(1) << " = " << num[i]/NEvts*11245.6*BrNb_.at(1) << endl;
     }
 
     // plot the rates vs lumi 
@@ -282,7 +282,7 @@ int rate(char const* input) {
     }*/
 
     // save histograms to file so I can look at them 
-    TFile* fout = new TFile("results/runNb_v2.root", "recreate");
+    TFile* fout = new TFile("results/runNb_375703_v042_spike.root", "recreate");
     runNbHist.Write(); 
     hTrigvsSumMinus_unpacker.Write();
     hTrigvsSumPlus_unpacker.Write();
@@ -290,7 +290,7 @@ int rate(char const* input) {
     hTrigvsSumPlus_Emu.Write();
     hlumi.SetName("hlumi");
     hlumi.Write();
-    for (int it=0;it<22;it++) {
+    for (int it=0;it<24;it++) {
 	hlumi_itrig[it].SetName(("hlumi_itrig"+to_string(it)).c_str());
 	hlumi_itrig[it].Write();
     }

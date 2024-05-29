@@ -225,7 +225,7 @@ int checkUnpacker(
           sumPlusEmuBx->Fill(globalBxEmu, emSum);
           sumPlusCorr->Fill(emSum, unpackedSumToComparePlus);
 
-	  if(emSum != unpackedSumToComparePlus){// && unpackedSumToComparePlus!=1023){
+	  if(emSum != unpackedSumToComparePlus && unpackedSumToComparePlus!=1023){
             std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
             std::cout << "[Error]: Unpacked sums and emulated sums do not match" << std::endl;
             std::cout << "Emulated Sum Plus: " << emSum << " Emu Bx: " << emBx <<  " Unpacked Sum Plus: " << unpackedSumToComparePlus << std::endl;
@@ -248,7 +248,7 @@ int checkUnpacker(
   std::cout << "Number of events with unpacker errors: " << unpackerErrors << std::endl;
   std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
 
-  TFile* outfile = new TFile("/eos/cms/store/group/phys_heavyions/xueli/HIZeroBias0/ZDCEmu_HIZeroBias_LUTv1_OOTPU_2/unpackerTest_Run374106_FullSample.root","RECREATE");
+  TFile* outfile = new TFile("/eos/cms/store/group/phys_heavyions/xueli/HIZeroBias0/ZDCEmu_HIZeroBias_LUTv1_OOTPU_caloParsv042_allLumi/unpackerTest_FullSample.root","RECREATE");
   unpackerTest->Write();
   sumPlusCorr->Write(); 
   sumMinusCorr->Write();
