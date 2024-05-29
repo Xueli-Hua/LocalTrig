@@ -134,12 +134,12 @@ int rate(char const* input, char const* output) {
 
     vector<string> seeds={"L1_ZeroBias_copy","L1_SingleMu5","L1_SingleMu3","L1_SingleJet8_BptxAND","L1_SingleJet16","L1_SingleJet28","L1_SingleEG5","L1_SingleEG15","L1_SingleMuOpen_SingleEG15","L1_ZDC1n_Bkp1_OR","L1_SingleJet8_ZDC1n_AsymXOR","L1_SingleJet12_ZDC1n_AsymXOR","L1_SingleJet16_ZDC1n_AsymXOR","L1_SingleJet20_ZDC1n_AsymXOR","L1_SingleJet24_ZDC1n_AsymXOR","L1_SingleJet28_ZDC1n_AsymXOR","L1_SingleJet8_ZDC1n_OR","L1_SingleJet12_ZDC1n_OR","L1_SingleJet16_ZDC1n_OR","L1_SingleJet20_ZDC1n_OR","L1_SingleJet24_ZDC1n_OR","L1_SingleJet28_ZDC1n_OR","L1_ZDC1n_AsymXOR","L1_ZDC1n_OR"};
     bool l1uGTEmudecisions[24];
-    bool l1uGTdecisions[24];
+    //bool l1uGTdecisions[24];
     Double_t num[24];
 
     Int_t Nseeds = names.size();
     bool l1uGTEmu[Nseeds];
-    bool l1uGT[Nseeds];
+    //bool l1uGT[Nseeds];
     Double_t npass[Nseeds];
     
     // read in emulated information
@@ -206,7 +206,7 @@ int rate(char const* input, char const* output) {
 	
 	for (int it=0;it<24;it++) {
 	    l1uGTEmudecisions[it]=m_algoDecisionInitial_Emu.At(SeedBit[seeds[it].c_str()]);
-	    l1uGTdecisions[it]=m_algoDecisionInitial_unpacker.At(SeedBit[seeds[it].c_str()]);
+	    //l1uGTdecisions[it]=m_algoDecisionInitial_unpacker.At(SeedBit[seeds[it].c_str()]);
 	    if (l1uGTEmudecisions[it]) {
 		num[it]++;
 		hlumi_itrig[it].Fill(*lumi);
@@ -215,7 +215,7 @@ int rate(char const* input, char const* output) {
 
 	for (unsigned int is=0;is<names.size();is++) {
 	    l1uGTEmu[is]=m_algoDecisionInitial_Emu.At(SeedBit[names[is].c_str()]);
-	    l1uGT[is]=m_algoDecisionInitial_unpacker.At(SeedBit[names[is].c_str()]);
+	    //l1uGT[is]=m_algoDecisionInitial_unpacker.At(SeedBit[names[is].c_str()]);
 	    if (l1uGTEmu[is]) npass[is]++;
 	}
 
