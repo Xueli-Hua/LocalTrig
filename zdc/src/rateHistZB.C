@@ -28,6 +28,7 @@ Output: A plot of the jet turn-ons with and with out L1 dR matching vs calo jet 
 
 #include <regex>
 #include <map>
+#include <iomanip>
 
 using namespace std;
 
@@ -212,10 +213,10 @@ int rate(char const* input, char const* output) {
 	    }
 	}
 
-	for (int is=0;is<names.size();is++) {
+	for (unsigned int is=0;is<names.size();is++) {
 	    l1uGTEmu[is]=m_algoDecisionInitial_Emu.At(SeedBit[names[is].c_str()]);
 	    l1uGT[is]=m_algoDecisionInitial_unpacker.At(SeedBit[names[is].c_str()]);
-	    if (l1uGTEmu[it]) npass[is]++;
+	    if (l1uGTEmu[is]) npass[is]++;
 	}
 
     }
@@ -233,13 +234,13 @@ int rate(char const* input, char const* output) {
 
     ofstream trigrates;
     trigrates.open("results/trigRates_"+string(output)+".txt");
-    for (int j=0;j<names.size();j++){
+    for (unsigned int j=0;j<names.size();j++){
 	trigrates << names[j].c_str() << setw(20) << npass[j]/NEvts*11245.6*BrNb_.at(1) << endl;
     }
     trigrates.close();
 
     // save histograms to file so I can look at them 
-    TFile* fout = new TFile("results/runNb_"+string(output)+".root", "recreate");
+    TFile* fout = new TFile(("results/runNb_"+string(output)+".root").c_str(), "recreate");
     runNbHist.Write(); 
     hlumi.SetName("hlumi");
     hlumi.Write();
