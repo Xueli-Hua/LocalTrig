@@ -148,6 +148,7 @@ int rate(char const* input, char const* output) {
     Int_t Nseeds = names.size();
     bool l1uGTEmu[Nseeds];
     Long64_t npass[Nseeds];
+    for (Int_t is=0;is<Nseeds;is++) npass[i]=0;
 	 
     // read in l1EventTree
     TChain l1EvtChain("l1EventTree/L1EventTree");
@@ -200,9 +201,9 @@ int rate(char const* input, char const* output) {
 	    }
 	}*/
 
-	for (unsigned int is=0;is<names.size();is++) {
+	for (Int_t is=0;is<Nseeds;is++) {
 	    l1uGTEmu[is]=m_algoDecisionInitial_Emu.At(SeedBit[names[is].c_str()]);
-	    if (l1uGTEmu[is]) npass[is]++;
+	    if (l1uGTEmu[is]) npass[is] += 1;
 	}
 
     }
@@ -216,8 +217,10 @@ int rate(char const* input, char const* output) {
 
     ofstream trigrates;
     trigrates.open("results/trigRates_"+string(output)+".txt");
-    for (unsigned int j=0;j<names.size();j++){
-	trigrates << names[j].c_str() << setw(20) << npass[j] << "/" << NEvts << "*11245.6*" << BrNb_.at(1) << " = "  << setw(20) << npass[j]*11245.6*BrNb_.at(1)/NEvts << endl;
+    Double_t rateZB[Nseeds];
+    for (Int_t j=0;j<Nseeds;j++) {
+	rateZB[j] = npass[j]*11245.6*BrNb_.at(1)/NEvts;
+	trigrates << names[j].c_str() << setw(20) << npass[j] << "*11245.6*" << BrNb_.at(1) << "/" << NEvts << " = "  << setw(20) << rateZB[j] << endl;
     }
     trigrates.close();
 
