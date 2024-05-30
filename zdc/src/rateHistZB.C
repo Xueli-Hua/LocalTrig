@@ -147,7 +147,7 @@ int rate(char const* input, char const* output) {
     }
     Int_t Nseeds = names.size();
     bool l1uGTEmu[Nseeds];
-    Int_t npass[Nseeds];
+    Long64_t npass[Nseeds];
 	 
     // read in l1EventTree
     TChain l1EvtChain("l1EventTree/L1EventTree");
