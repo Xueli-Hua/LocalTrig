@@ -217,7 +217,7 @@ int rate(char const* input, char const* output) {
     ofstream trigrates;
     trigrates.open("results/trigRates_"+string(output)+".txt");
     for (unsigned int j=0;j<names.size();j++){
-	trigrates << names[j].c_str() << setw(20) << npass[j] << "/" << NEvts << "*11245.6*" << BrNb_.at(1) << " = "  << setw(20) << npass[j]/NEvts*11245.6*BrNb_.at(1) << endl;
+	trigrates << names[j].c_str() << setw(20) << npass[j] << "/" << NEvts << "*11245.6*" << BrNb_.at(1) << " = "  << setw(20) << npass[j]*11245.6*BrNb_.at(1)/NEvts << endl;
     }
     trigrates.close();
 
