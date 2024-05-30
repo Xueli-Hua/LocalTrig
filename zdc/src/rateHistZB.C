@@ -171,7 +171,7 @@ int rate(char const* input, char const* output) {
 
     // read in information from TTrees 
     for (Long64_t i = 0; i < totalEvents; i++) {
-        l1uGTReader.Next();l1uGTEmuReader.Next();unpackerReader.Next();emuReader.Next();l1EvtReader.Next();
+        l1uGTReader.Next();l1uGTEmuReader.Next();l1EvtReader.Next();
         if (i % 200000 == 0) { 
             cout << "Entry: " << i << " / " <<  totalEvents << endl; 
         }
