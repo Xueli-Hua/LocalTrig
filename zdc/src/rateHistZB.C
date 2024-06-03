@@ -136,6 +136,7 @@ int rate(char const* input, char const* output) {
     Double_t sgmonum=0;
 
     vector<string> seeds={"L1_ZeroBias_copy","L1_SingleMu5","L1_SingleMu3","L1_SingleJet8_BptxAND","L1_SingleJet16","L1_SingleJet28","L1_SingleEG5","L1_SingleEG15","L1_SingleMuOpen_SingleEG15","L1_ZDC1n_Bkp1_OR","L1_SingleJet8_ZDC1n_AsymXOR","L1_SingleJet12_ZDC1n_AsymXOR","L1_SingleJet16_ZDC1n_AsymXOR","L1_SingleJet20_ZDC1n_AsymXOR","L1_SingleJet24_ZDC1n_AsymXOR","L1_SingleJet28_ZDC1n_AsymXOR","L1_SingleJet8_ZDC1n_OR","L1_SingleJet12_ZDC1n_OR","L1_SingleJet16_ZDC1n_OR","L1_SingleJet20_ZDC1n_OR","L1_SingleJet24_ZDC1n_OR","L1_SingleJet28_ZDC1n_OR","L1_ZDC1n_AsymXOR","L1_ZDC1n_OR"};
+    vector<string> seeds={"L1_ZeroBias","L1_SingleMu5","L1_ZDCP22","L1_SingleMu3","L1_ZDCM14","L1_SingleEG3","L1_SingleEG5","L1_SingleJet8_BptxAND","L1_SingleJet16_BptxAND","L1_SingleJet28_BptxAND","L1_SingleMuOpen","L1_SingleEG15_BptxAND","L1_SingleMuOpen_SingleEG15_BptxAND","L1_ZDC1n_OR_BptxAND","L1_SingleJet8_ZDC1n_AsymXOR_BptxAND","L1_SingleJet12_ZDC1n_AsymXOR_BptxAND","L1_SingleJet16_ZDC1n_AsymXOR_BptxAND","L1_SingleJet20_ZDC1n_AsymXOR_BptxAND","L1_SingleJet24_ZDC1n_AsymXOR_BptxAND","L1_SingleJet28_ZDC1n_AsymXOR_BptxAND"};
     bool l1uGTEmudecisions[24];
     Double_t num[24];*/
 
@@ -148,7 +149,7 @@ int rate(char const* input, char const* output) {
     Int_t Nseeds = names.size();
     bool l1uGTEmu[Nseeds];
     Int_t npass[Nseeds];
-    for (Int_t is=0;is<Nseeds;is++) npass[i]=0;
+    for (Int_t is=0;is<Nseeds;is++) npass[is]=0;
 	 
     // read in l1EventTree
     TChain l1EvtChain("l1EventTree/L1EventTree");
