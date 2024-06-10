@@ -142,15 +142,15 @@ int Efficiency(char const* input) {
     Int_t mb30To100num=0;
     Int_t truenum=0;
     Int_t sgmonum=0;
-    Int_t 80to100num=0;
-    Int_t 30to50num=0;
+    Int_t num80to100=0;
+    Int_t num30to50=0;
     Int_t mbnum=0;
 
     Int_t mb30To100ANDsgmonum=0;
-    Int_t 80to100ANDsgmonum=0;
-    Int_t 80to100ANDmbnum=0;
-    Int_t 30to50ANDsgmonum=0;
-    Int_t 30to50ANDmbnum=0;
+    Int_t cen80to100ANDsgmonum=0;
+    Int_t cen80to100ANDmbnum=0;
+    Int_t cen30to50ANDsgmonum=0;
+    Int_t cen30to50ANDmbnum=0;
 
 
     Int_t NEvts=0;
@@ -179,23 +179,30 @@ int Efficiency(char const* input) {
         if (l1uGTdecisiontrue) truenum++;
         if (l1uGTdecisionsgmo) {
 	   sgmonum++;
-	   if (l1uGTdecision30to50) 30to50ANDsgmonum++;
-	   if (l1uGTdecision80to100) 80to100ANDsgmonum++;
+	   if (l1uGTdecision30to50) cen30to50ANDsgmonum++;
+	   if (l1uGTdecision80to100) cen80to100ANDsgmonum++;
 	}
 	if (l1uGTdecisionmb) {
 	   mbnum++;
-	   if (l1uGTdecision30to50) 30to50ANDmbnum++;
-	   if (l1uGTdecision80to100) 80to100ANDmbnum++;
+	   if (l1uGTdecision30to50) cen30to50ANDmbnum++;
+	   if (l1uGTdecision80to100) cen80to100ANDmbnum++;
 	}
+        if (l1uGTdecision30to50) num30to50++;
+        if (l1uGTdecision80to100) num80to100++;
     }
     cout << "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << mb30To100num << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mb30To100num*11245.6*880/NEvts << endl;
     cout << "L1_AlwaysTrue rate: " << setw(20) << truenum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << truenum*11245.6*880/NEvts << endl;
     cout << "L1_SingleMuOpen rate: " << setw(20) << sgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << sgmonum*11245.6*880/NEvts << endl;
     cout << "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND + L1_SingleMuOpen rate: " << setw(20) << mb30To100ANDsgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mb30To100ANDsgmonum*11245.6*880/NEvts << endl;
-    cout << "L1_Centrality_80_100_BptxAND + L1_SingleMuOpen rate: " << setw(20) << 80to100ANDsgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << 80to100ANDsgmonum*11245.6*880/NEvts << endl;
-    cout << "L1_Centrality_80_100_BptxAND + L1_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << 80to100ANDmbnum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << 80to100ANDmbnum*11245.6*880/NEvts << endl;
-    cout << "L1_Centrality_30_50_BptxAND + L1_SingleMuOpen rate: " << setw(20) << 30to50ANDsgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << 30to50ANDsgmonum*11245.6*880/NEvts << endl;
-    cout << "L1_Centrality_30_50_BptxAND + L1_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << 30to50ANDmbnum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << 30to50ANDmbnum*11245.6*880/NEvts << endl;
+   
+    cout << "L1_Centrality_80_100_BptxAND rate: " << setw(20) << num80to100 << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << num80to100*11245.6*880/NEvts << endl;
+    cout << "L1_Centrality_30_50_BptxAND rate: " << setw(20) << num30to50 << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << num30to50*11245.6*880/NEvts << endl;
+    cout << "L1_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << mbnum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mbnum*11245.6*880/NEvts << endl;
+    
+    cout << "L1_Centrality_80_100_BptxAND + L1_SingleMuOpen rate: " << setw(20) << cen80to100ANDsgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << cen80to100ANDsgmonum*11245.6*880/NEvts << endl;
+    cout << "L1_Centrality_80_100_BptxAND + L1_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << cen80to100ANDmbnum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << cen80to100ANDmbnum*11245.6*880/NEvts << endl;
+    cout << "L1_Centrality_30_50_BptxAND + L1_SingleMuOpen rate: " << setw(20) << cen30to50ANDsgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << cen30to50ANDsgmonum*11245.6*880/NEvts << endl;
+    cout << "L1_Centrality_30_50_BptxAND + L1_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << cen30to50ANDmbnum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << cen30to50ANDmbnum*11245.6*880/NEvts << endl;
    
     return 0;
 }
