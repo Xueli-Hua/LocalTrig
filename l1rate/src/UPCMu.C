@@ -141,7 +141,7 @@ int Efficiency(char const* input) {
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
     for (Long64_t i = 0; i < totalEvents; i++) {
-        l1uGTReader.Next();l1EvtChain.Next();
+        l1uGTReader.Next();l1EvtReader.Next();
         if (i % 20000 == 0) { 
             cout << "Entry: " << i << " / " <<  totalEvents << endl; 
         }
