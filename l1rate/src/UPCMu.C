@@ -119,13 +119,19 @@ int Efficiency(char const* input) {
     for (auto const & name: names) trignames << name.c_str() << endl;
     trignames.close();
     
-    string seedmb = "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND"; 
+    string seedmb30To100 = "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND"; 
     string seedtrue = "L1_AlwaysTrue";
     string seedsgmo = "L1_SingleMuOpen";
+    string seed80to100 = "L1_Centrality_80_100_BptxAND";
+    string seed30to50 = "L1_Centrality_30_50_BptxAND";
+    string seedmb = "L1_MinimumBiasHF1_AND_BptxAND";
     if (SeedBit.find(seedmb.c_str()) == SeedBit.end()) return false;
-    bool l1uGTdecision1;
-    bool l1uGTdecision2;
-    bool l1uGTdecision3;
+    bool l1uGTdecisionmb30To100;
+    bool l1uGTdecisiontrue;
+    bool l1uGTdecisionsgmo;
+    bool l1uGTdecision80to100;
+    bool l1uGTdecision30to50;
+    bool l1uGTdecisionmb;
 
     // read in l1EventTree
     TChain l1EvtChain("l1EventTree/L1EventTree");
@@ -133,10 +139,20 @@ int Efficiency(char const* input) {
     TTreeReader l1EvtReader(&l1EvtChain);
     TTreeReaderValue<UInt_t> runNb(l1EvtReader, "run");
 
-    Int_t mbnum=0;
+    Int_t mb30To100num=0;
     Int_t truenum=0;
     Int_t sgmonum=0;
-    Int_t mbANDsgmonum=0;
+    Int_t 80to100num=0;
+    Int_t 30to50num=0;
+    Int_t mbnum=0;
+
+    Int_t mb30To100ANDsgmonum=0;
+    Int_t 80to100ANDsgmonum=0;
+    Int_t 80to100ANDmbnum=0;
+    Int_t 30to50ANDsgmonum=0;
+    Int_t 30to50ANDmbnum=0;
+
+
     Int_t NEvts=0;
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
@@ -147,23 +163,39 @@ int Efficiency(char const* input) {
         }
 
         if (*runNb!=375703) continue;
-	      NEvts++;
+	NEvts++;
 
         if (SeedBit[seedmb.c_str()]>=m_algoDecisionInitial.GetSize()) continue;  
-        l1uGTdecision1 = m_algoDecisionInitial.At(SeedBit[seedmb.c_str()]);
-        l1uGTdecision2 = m_algoDecisionInitial.At(SeedBit[seedtrue.c_str()]);
-        l1uGTdecision3 = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
-        if (l1uGTdecision1) {
-            mbnum++;
-            if (l1uGTdecision3) mbANDsgmonum++;
+        l1uGTdecisionmb30To100 = m_algoDecisionInitial.At(SeedBit[seedmb30To100.c_str()]);
+        l1uGTdecisiontrue = m_algoDecisionInitial.At(SeedBit[seedtrue.c_str()]);
+        l1uGTdecisionsgmo = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
+        l1uGTdecision30to50 = m_algoDecisionInitial.At(SeedBit[seed30to50.c_str()]);
+        l1uGTdecision80to100 = m_algoDecisionInitial.At(SeedBit[seed80to100.c_str()]);
+        l1uGTdecisionmb = m_algoDecisionInitial.At(SeedBit[seedmb.c_str()]);
+        if (l1uGTdecisionmb30To100) {
+            mb30To100num++;
+            if (l1uGTdecisionsgmo) mb30To100ANDsgmonum++;
         }
-        if (l1uGTdecision2) truenum++;
-        if (l1uGTdecision3) sgmonum++;
+        if (l1uGTdecisiontrue) truenum++;
+        if (l1uGTdecisionsgmo) {
+	   sgmonum++;
+	   if (l1uGTdecision30to50) 30to50ANDsgmonum++;
+	   if (l1uGTdecision80to100) 80to100ANDsgmonum++;
+	}
+	if (l1uGTdecisionmb) {
+	   mbnum++;
+	   if (l1uGTdecision30to50) 30to50ANDmbnum++;
+	   if (l1uGTdecision80to100) 80to100ANDmbnum++;
+	}
     }
-    cout << "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << mbnum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mbnum*11245.6*880/NEvts << endl;
+    cout << "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << mb30To100num << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mb30To100num*11245.6*880/NEvts << endl;
     cout << "L1_AlwaysTrue rate: " << setw(20) << truenum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << truenum*11245.6*880/NEvts << endl;
     cout << "L1_SingleMuOpen rate: " << setw(20) << sgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << sgmonum*11245.6*880/NEvts << endl;
-    cout << "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND + L1_SingleMuOpen rate: " << setw(20) << mbANDsgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mbANDsgmonum*11245.6*880/NEvts << endl;
+    cout << "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND + L1_SingleMuOpen rate: " << setw(20) << mb30To100ANDsgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mb30To100ANDsgmonum*11245.6*880/NEvts << endl;
+    cout << "L1_Centrality_80_100_BptxAND + L1_SingleMuOpen rate: " << setw(20) << 80to100ANDsgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << 80to100ANDsgmonum*11245.6*880/NEvts << endl;
+    cout << "L1_Centrality_80_100_BptxAND + L1_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << 80to100ANDmbnum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << 80to100ANDmbnum*11245.6*880/NEvts << endl;
+    cout << "L1_Centrality_30_50_BptxAND + L1_SingleMuOpen rate: " << setw(20) << 30to50ANDsgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << 30to50ANDsgmonum*11245.6*880/NEvts << endl;
+    cout << "L1_Centrality_30_50_BptxAND + L1_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << 30to50ANDmbnum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << 30to50ANDmbnum*11245.6*880/NEvts << endl;
    
     return 0;
 }
