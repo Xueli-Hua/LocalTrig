@@ -127,11 +127,11 @@ int Efficiency(char const* input) {
     bool l1uGTdecision2;
     bool l1uGTdecision3;
 
-    // read in l1UpgradeTree 
-    TChain l1UpgChain("l1UpgradeTree/L1UpgradeTree");
-    FillChain(l1UpgChain, files);
-    TTreeReader l1UpgReader(&l1UpgChain);
-    TTreeReaderArray<float> sumZDCEt(l1UpgReader, "sumZDCEt");
+    // read in l1EventTree
+    TChain l1EvtChain("l1EventTree/L1EventTree");
+    FillChain(l1EvtChain, files);
+    TTreeReader l1EvtReader(&l1EvtChain);
+    TTreeReaderValue<UInt_t> runNb(l1EvtReader, "run");
 
     Int_t mbnum=0;
     Int_t truenum=0;
@@ -141,7 +141,7 @@ int Efficiency(char const* input) {
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
     // read in information from TTrees 
     for (Long64_t i = 0; i < totalEvents; i++) {
-        l1uGTReader.Next();l1UpgReader.Next();
+        l1uGTReader.Next();l1EvtChain.Next();
         if (i % 20000 == 0) { 
             cout << "Entry: " << i << " / " <<  totalEvents << endl; 
         }
@@ -149,11 +149,10 @@ int Efficiency(char const* input) {
         if (*runNb!=375703) continue;
 	      NEvts++;
 
-        if (SeedBit[seedzdc.c_str()]>=m_algoDecisionInitial.GetSize()) continue;  
-        l1uGTdecision1 = m_algoDecisionInitial.At(SeedBit[seedzdc.c_str()]);
+        if (SeedBit[seedmb.c_str()]>=m_algoDecisionInitial.GetSize()) continue;  
+        l1uGTdecision1 = m_algoDecisionInitial.At(SeedBit[seedmb.c_str()]);
         l1uGTdecision2 = m_algoDecisionInitial.At(SeedBit[seedtrue.c_str()]);
         l1uGTdecision3 = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
-        cout << "iEvt: " << i << ", sumZDCEt.size: " << sumZDCEt.GetSize() << endl;
         if (l1uGTdecision1) {
             mbnum++;
             if (l1uGTdecision3) mbANDsgmonum++;
