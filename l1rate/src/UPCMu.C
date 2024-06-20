@@ -172,9 +172,9 @@ int Efficiency(char const* input) {
         l1uGTdecisionsgmo = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
         l1uGTdecision30to100 = m_algoDecisionInitial.At(SeedBit[seed30to100.c_str()]);
         l1uGTdecisionmb = m_algoDecisionInitial.At(SeedBit[seedmb.c_str()]);
-        if (l1uGTdecisiomumb30To100) mumb30To100num++;
-        if (l1uGTdecisiomb30To100) mb30To100num++;
-        if (l1uGTdecisiomu30To100) mu30To100num++;
+        if (l1uGTdecisionmumb30To100) mumb30To100num++;
+        if (l1uGTdecisionmb30To100) mb30To100num++;
+        if (l1uGTdecisionmu30To100) mu30To100num++;
         if (l1uGTdecisiontrue) truenum++;
         if (l1uGTdecisionsgmo) sgmonum++;
         if (l1uGTdecision30to100) num30T0100++;
