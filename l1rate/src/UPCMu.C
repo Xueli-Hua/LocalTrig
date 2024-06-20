@@ -118,19 +118,24 @@ int Efficiency(char const* input) {
     trignames.open("results/trigs.txt");
     for (auto const & name: names) trignames << name.c_str() << endl;
     trignames.close();
-    
+
+    string seedmumb30To100 = "L1_SingleMuOpen_Centrality_30_100_MinimumBiasHF1_AND_BptxAND";
     string seedmb30To100 = "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND"; 
+    string seedmu30To100 = "L1_SIngleMuOpen_Centrality_30_100_BptxAND";
     string seedtrue = "L1_AlwaysTrue";
+    string seed30to100 = "L1_Centrality_30_100_BptxAND";
     string seedsgmo = "L1_SingleMuOpen";
-    string seed80to100 = "L1_Centrality_80_100_BptxAND";
-    string seed30to50 = "L1_Centrality_30_50_BptxAND";
     string seedmb = "L1_MinimumBiasHF1_AND_BptxAND";
+
+    string seed80to100 = "L1_Centrality_80_100_BptxAND";
+    
     if (SeedBit.find(seedmb.c_str()) == SeedBit.end()) return false;
     bool l1uGTdecisionmb30To100;
+    bool l1uGTdecisionmumb30To100;
+    bool l1uGTdecisionmu30To100;
     bool l1uGTdecisiontrue;
     bool l1uGTdecisionsgmo;
-    bool l1uGTdecision80to100;
-    bool l1uGTdecision30to50;
+    bool l1uGTdecision30to100;
     bool l1uGTdecisionmb;
 
     // read in l1EventTree
@@ -140,18 +145,12 @@ int Efficiency(char const* input) {
     TTreeReaderValue<UInt_t> runNb(l1EvtReader, "run");
 
     Int_t mb30To100num=0;
+    Int_t mu30To100num=0;
+    Int_t mumb30To100num=0;
     Int_t truenum=0;
     Int_t sgmonum=0;
-    Int_t num80to100=0;
-    Int_t num30to50=0;
     Int_t mbnum=0;
-
-    Int_t mb30To100ANDsgmonum=0;
-    Int_t cen80to100ANDsgmonum=0;
-    Int_t cen80to100ANDmbnum=0;
-    Int_t cen30to50ANDsgmonum=0;
-    Int_t cen30to50ANDmbnum=0;
-
+    Int_t num30T0100=0;
 
     Int_t NEvts=0;
     Long64_t totalEvents = l1uGTReader.GetEntries(true);
@@ -167,43 +166,28 @@ int Efficiency(char const* input) {
 
         if (SeedBit[seedmb.c_str()]>=m_algoDecisionInitial.GetSize()) continue;  
         l1uGTdecisionmb30To100 = m_algoDecisionInitial.At(SeedBit[seedmb30To100.c_str()]);
+        l1uGTdecisionmu30To100 = m_algoDecisionInitial.At(SeedBit[seedmu30To100.c_str()]);
+        l1uGTdecisionmumb30To100 = m_algoDecisionInitial.At(SeedBit[seedmumb30To100.c_str()]);
         l1uGTdecisiontrue = m_algoDecisionInitial.At(SeedBit[seedtrue.c_str()]);
         l1uGTdecisionsgmo = m_algoDecisionInitial.At(SeedBit[seedsgmo.c_str()]);
-        l1uGTdecision30to50 = m_algoDecisionInitial.At(SeedBit[seed30to50.c_str()]);
-        l1uGTdecision80to100 = m_algoDecisionInitial.At(SeedBit[seed80to100.c_str()]);
+        l1uGTdecision30to100 = m_algoDecisionInitial.At(SeedBit[seed30to100.c_str()]);
         l1uGTdecisionmb = m_algoDecisionInitial.At(SeedBit[seedmb.c_str()]);
-        if (l1uGTdecisionmb30To100) {
-            mb30To100num++;
-            if (l1uGTdecisionsgmo) mb30To100ANDsgmonum++;
-        }
+        if (l1uGTdecisiomumb30To100) mumb30To100num++;
+        if (l1uGTdecisiomb30To100) mb30To100num++;
+        if (l1uGTdecisiomu30To100) mu30To100num++;
         if (l1uGTdecisiontrue) truenum++;
-        if (l1uGTdecisionsgmo) {
-	   sgmonum++;
-	   if (l1uGTdecision30to50) cen30to50ANDsgmonum++;
-	   if (l1uGTdecision80to100) cen80to100ANDsgmonum++;
-	}
-	if (l1uGTdecisionmb) {
-	   mbnum++;
-	   if (l1uGTdecision30to50) cen30to50ANDmbnum++;
-	   if (l1uGTdecision80to100) cen80to100ANDmbnum++;
-	}
-        if (l1uGTdecision30to50) num30to50++;
-        if (l1uGTdecision80to100) num80to100++;
+        if (l1uGTdecisionsgmo) sgmonum++;
+        if (l1uGTdecision30to100) num30T0100++;
+        if (l1uGTdecisionmb) mbnum++;
     }
+    cout << "L1_SingleMuOpen_Centrality_30_100_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << mumb30To100num << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mumb30To100num*11245.6*880/NEvts << endl;
     cout << "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << mb30To100num << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mb30To100num*11245.6*880/NEvts << endl;
+    cout << "L1_SIngleMuOpen_Centrality_30_100_BptxAND rate: " << setw(20) << mu30To100num << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mu30To100num*11245.6*880/NEvts << endl;
+    cout << "L1_Centrality_30_100_BptxAND rate: " << setw(20) << num30T0100 << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << num30T0100*11245.6*880/NEvts << endl;
     cout << "L1_AlwaysTrue rate: " << setw(20) << truenum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << truenum*11245.6*880/NEvts << endl;
     cout << "L1_SingleMuOpen rate: " << setw(20) << sgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << sgmonum*11245.6*880/NEvts << endl;
-    cout << "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND + L1_SingleMuOpen rate: " << setw(20) << mb30To100ANDsgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mb30To100ANDsgmonum*11245.6*880/NEvts << endl;
-   
-    cout << "L1_Centrality_80_100_BptxAND rate: " << setw(20) << num80to100 << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << num80to100*11245.6*880/NEvts << endl;
-    cout << "L1_Centrality_30_50_BptxAND rate: " << setw(20) << num30to50 << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << num30to50*11245.6*880/NEvts << endl;
     cout << "L1_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << mbnum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mbnum*11245.6*880/NEvts << endl;
     
-    cout << "L1_Centrality_80_100_BptxAND + L1_SingleMuOpen rate: " << setw(20) << cen80to100ANDsgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << cen80to100ANDsgmonum*11245.6*880/NEvts << endl;
-    cout << "L1_Centrality_80_100_BptxAND + L1_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << cen80to100ANDmbnum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << cen80to100ANDmbnum*11245.6*880/NEvts << endl;
-    cout << "L1_Centrality_30_50_BptxAND + L1_SingleMuOpen rate: " << setw(20) << cen30to50ANDsgmonum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << cen30to50ANDsgmonum*11245.6*880/NEvts << endl;
-    cout << "L1_Centrality_30_50_BptxAND + L1_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << cen30to50ANDmbnum << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << cen30to50ANDmbnum*11245.6*880/NEvts << endl;
-   
     return 0;
 }
 
