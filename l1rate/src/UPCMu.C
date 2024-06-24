@@ -119,7 +119,7 @@ int Efficiency(char const* input) {
     for (auto const & name: names) trignames << name.c_str() << endl;
     trignames.close();
 
-    string seedmumb30To100 = "L1_SingleMuOpen_Centrality_30_100_MinimumBiasHF1_AND_BptxAND";
+    string seedmumb30To100 = "L1_SIngleMuOpen_Centrality_30_100_MinimumBiasHF1_AND_BptxAND";
     string seedmb30To100 = "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND"; 
     string seedmu30To100 = "L1_SIngleMuOpen_Centrality_30_100_BptxAND";
     string seedtrue = "L1_AlwaysTrue";
@@ -141,9 +141,9 @@ int Efficiency(char const* input) {
     bool l1uGT30to100;
     bool l1uGTmb;
 
-    bool l1uGTmb80To100;
-    bool l1uGTmumb80To100;
-    bool l1uGTmu80To100;
+    //bool l1uGTmb80To100;
+    //bool l1uGTmumb80To100;
+    //bool l1uGTmu80To100;
     bool l1uGT80to100;
 
     // read in l1EventTree
@@ -186,9 +186,9 @@ int Efficiency(char const* input) {
         l1uGT30to100 = m_algoDecisionInitial.At(SeedBit[seed30to100.c_str()]);
         l1uGTmb = m_algoDecisionInitial.At(SeedBit[seedmb.c_str()]);
 
-	l1uGTmb80To100 = m_algoDecisionInitial.At(SeedBit[seedmb80To100.c_str()]);
-        l1uGTmu80To100 = m_algoDecisionInitial.At(SeedBit[seedmu80To100.c_str()]);
-        l1uGTmumb80To100 = m_algoDecisionInitial.At(SeedBit[seedmumb80To100.c_str()]);
+	//l1uGTmb80To100 = m_algoDecisionInitial.At(SeedBit[seedmb80To100.c_str()]);
+        //l1uGTmu80To100 = m_algoDecisionInitial.At(SeedBit[seedmu80To100.c_str()]);
+        //l1uGTmumb80To100 = m_algoDecisionInitial.At(SeedBit[seedmumb80To100.c_str()]);
 	l1uGT80to100 = m_algoDecisionInitial.At(SeedBit[seed80to100.c_str()]);
 
         if (l1uGTmumb30To100) mumb30To100num++;
@@ -199,9 +199,9 @@ int Efficiency(char const* input) {
         if (l1uGT30to100) num30T0100++;
         if (l1uGTmb) mbnum++;
 
-	if (l1uGTmumb80To100) mumb80To100num++;
-        if (l1uGTmb80To100) mb80To100num++;
-        if (l1uGTmu80To100) mu80To100num++;
+	if (l1uGT80to100 && l1uGTmb && l1uGTmu) mumb80To100num++;
+        if (l1uGT80to100 && l1uGTmb) mb80To100num++;
+        if (l1uGT80to100 && l1uGTmu) mu80To100num++;
 	if (l1uGT80to100) num80T0100++;
     }
     cout << "L1_SingleMuOpen_Centrality_30_100_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << mumb30To100num << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mumb30To100num*11245.6*880/NEvts << endl;
