@@ -175,7 +175,7 @@ int Efficiency(char const* input) {
         }
 
         if (*runNb!=375703) continue;
-	NEvts++;
+	NEvts += 1;
 
         if (SeedBit[seedmb.c_str()]>=m_algoDecisionInitial.GetSize()) continue;  
         l1uGTmb30To100 = m_algoDecisionInitial.At(SeedBit[seedmb30To100.c_str()]);
@@ -191,18 +191,18 @@ int Efficiency(char const* input) {
         //l1uGTmumb80To100 = m_algoDecisionInitial.At(SeedBit[seedmumb80To100.c_str()]);
 	l1uGT80to100 = m_algoDecisionInitial.At(SeedBit[seed80to100.c_str()]);
 
-        if (l1uGTmumb30To100) mumb30To100num++;
-        if (l1uGTmb30To100) mb30To100num++;
-        if (l1uGTmu30To100) mu30To100num++;
-        if (l1uGTtrue) truenum++;
-        if (l1uGTmu) munum++;
-        if (l1uGT30to100) num30T0100++;
-        if (l1uGTmb) mbnum++;
+        if (l1uGTmumb30To100) mumb30To100num += 1;
+        if (l1uGTmb30To100) mb30To100num += 1;
+        if (l1uGTmu30To100) mu30To100num += 1;
+        if (l1uGTtrue) truenum += 1;
+        if (l1uGTmu) munum += 1;
+        if (l1uGT30to100) num30T0100 += 1;
+        if (l1uGTmb) mbnum += 1;
 
-	if (l1uGT80to100 && l1uGTmb && l1uGTmu) mumb80To100num++;
-        if (l1uGT80to100 && l1uGTmb) mb80To100num++;
-        if (l1uGT80to100 && l1uGTmu) mu80To100num++;
-	if (l1uGT80to100) num80T0100++;
+	if (l1uGT80to100 && l1uGTmb && l1uGTmu) mumb80To100num += 1;
+        if (l1uGT80to100 && l1uGTmb) mb80To100num += 1;
+        if (l1uGT80to100 && l1uGTmu) mu80To100num += 1;
+	if (l1uGT80to100) num80T0100 += 1;
     }
     cout << "L1_SingleMuOpen_Centrality_30_100_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << mumb30To100num << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mumb30To100num*11245.6*880/NEvts << endl;
     cout << "L1_Centrality_30_100_MinimumBiasHF1_AND_BptxAND rate: " << setw(20) << mb30To100num << "*11245.6*880" << "/" << NEvts << " = "  << setw(20) << mb30To100num*11245.6*880/NEvts << endl;
