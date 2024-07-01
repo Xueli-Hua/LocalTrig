@@ -119,10 +119,10 @@ int rate(char const* input, char const* output) {
         SeedBit[name.first] = ParseAlias(name.second);
     }
 
-    /*ofstream trignames;
+    ofstream trignames;
     trignames.open("results/trigs.txt");
     for (auto const & name: names) trignames << name.c_str() << endl;
-    trignames.close();*/
+    trignames.close();
     
     /*string seedzdc = "L1_SingleJet8_ZDC1n_AsymXOR"; 
     string seedzb = "L1_ZeroBias_copy";
