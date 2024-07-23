@@ -1,6 +1,9 @@
 /*
+# Check L1 trigger fires
+# Xueli Hua, <xueli.hua@cern.ch>
+# 5/20/2024
 Input: Folder of L1Ntuples
-Output: A plot of the jet turn-ons with and with out L1 dR matching vs calo jet pT
+Output: Histograms of ZDCM ZDCP
 */
 
 #include "TFile.h"

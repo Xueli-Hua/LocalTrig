@@ -1,3 +1,8 @@
+/*
+# plots of L1 seed rate
+# Xueli Hua, <xueli.hua@cern.ch>
+# 5/20/2024
+*/
 #include "TFile.h"
 #include "TTreeReader.h"
 #include "TTreeReaderValue.h"
